@@ -103,4 +103,24 @@ class ReservationController extends Controller
         //redirect
         return redirect()->route('dashboard.index');
     }
+
+    public function getYesterdayDataAPI($unique_key, $date) {
+        try{
+            $date_substring = date('d_m_Y', strtotime($date. ' -1 day'));
+            $unique_key_substring = substr($unique_key, 0, -10);
+            $new_unique_key = $unique_key_substring.$date_substring;
+            
+            $reservation = Reservation::where('unique_key', $new_unique_key)->first();
+            if($reservation == true) {
+                return $reservation;
+            } else {
+                return 'N/A';
+            }
+            
+        } 
+        catch (\Exception $e) {
+          return 'N/A';
+        }
+        
+    }
 }

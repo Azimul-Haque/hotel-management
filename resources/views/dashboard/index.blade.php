@@ -199,16 +199,35 @@
                   </select> 
                 </div>
                 <div class="form-group">
-                  {!! Form::label('name', 'Guest Name:') !!}
-                  {!! Form::text('name', null, array('class' => 'form-control', 'placeholder' => 'Guest Name', 'required' => '')) !!}
+                  {!! Form::label('name', 'Guest Name:') !!} 
+                    @if($availability == 'Available')
+                      <input type="hidden" id="copy_unique_key{{ $unique_key }}" value="{{ $unique_key }}">
+                      <input type="hidden" id="copy_date{{ $unique_key }}" value="{{ Carbon::today()->addDays($j) }}">
+                      <button type="button" class="btn btn-success btn-xs" id="copy_data_{{ $unique_key }}"><i class="fa fa-fw fa-clone" aria-hidden="true"></i>Copy guest data from Yesterday</button>
+                      <script type="text/javascript">
+                        $(document).ready(function(){
+                          $("#copy_data_{{ $unique_key }}").click(function(){
+                            $.get(window.location.protocol + "//" + window.location.host + "/reservation/yesterday/getdata/" + $('#copy_unique_key{{ $unique_key }}').val()+"/"+$('#copy_date{{ $unique_key }}').val(), function(data, status){
+                                if(data != 'N/A') {
+                                  $("#paste_name{{ $unique_key }}").val(data.name);
+                                  $("#paste_email{{ $unique_key }}").val(data.email);
+                                  $("#paste_phone{{ $unique_key }}").val(data.phone);
+                                  console.log('nicely done!');
+                                }
+                            });
+                          });
+                        });
+                      </script>
+                    @endif
+                  {!! Form::text('name', null, array('class' => 'form-control', 'placeholder' => 'Guest Name', 'required' => '', 'id' => 'paste_name'.$unique_key)) !!}
                 </div>
                 <div class="form-group">
                   {!! Form::label('email', 'Email Address:') !!}
-                  {!! Form::text('email', null, array('class' => 'form-control', 'placeholder' => 'Email Address', 'required' => '')) !!}
+                  {!! Form::text('email', null, array('class' => 'form-control', 'placeholder' => 'Email Address', 'required' => '', 'id' => 'paste_email'.$unique_key)) !!}
                 </div>
                 <div class="form-group">
                   {!! Form::label('phone', 'Contact Number:') !!}
-                  {!! Form::text('phone', null, array('class' => 'form-control', 'placeholder' => 'Contact Number', 'required' => '')) !!}
+                  {!! Form::text('phone', null, array('class' => 'form-control', 'placeholder' => 'Contact Number', 'required' => '', 'id' => 'paste_phone'.$unique_key)) !!}
                 </div>
                 <h4><i class="fa fa-handshake-o" aria-hidden="true"></i> <u>Financial Data</u></h4>
                 <div class="row">

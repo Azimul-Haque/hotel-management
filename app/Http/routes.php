@@ -27,6 +27,10 @@ Route::post('/reservation/store', ['as' => 'reservation.store', 'uses' => 'Reser
 Route::put('/reservation/update/{id}', ['as' => 'reservation.update', 'uses' => 'ReservationController@update']);
 Route::get('/reservation/vacant/{id}', ['as' => 'reservation.delete', 'uses' => 'ReservationController@delete']);
 Route::delete('/reservation/vacant/{id}', ['as' => 'reservation.destroy', 'uses' => 'ReservationController@destroy']);
+
+// reservations api...
+Route::get('/reservation/yesterday/getdata/{unique_key}/{date}', ['as' => 'reservation.getdata.api', 'uses' => 'ReservationController@getYesterdayDataAPI']);
+// reservations api...
 // reservations...
 
 // monthly statement

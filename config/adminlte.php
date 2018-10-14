@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'title' => 'AdminLTE 2',
+    'title' => 'Gaanchil',
 
     'title_prefix' => '',
 
@@ -30,9 +30,9 @@ return [
     |
     */
 
-    'logo' => '<b>Admin</b>LTE',
+    'logo' => '<b>Gaan</b>Chil',
 
-    'logo_mini' => '<b>A</b>LT',
+    'logo_mini' => '<b>G</b>C',
 
     /*
     |--------------------------------------------------------------------------
@@ -111,14 +111,26 @@ return [
         'DASHBOARD',
         [
             'text'        => 'Dashboard',
-            'url'         => '/dashboard',
+            'route'         => 'dashboard.index',
             'icon'        => 'tachometer',
             'icon_color' => 'lightgreen',
+        ],
+        [
+            'text'        => 'Blackout Days',
+            'route'         => 'dashboard.blackout',
+            'icon'        => 'calendar-times-o',
+            'icon_color' => 'aqua',
+        ],
+        [
+            'text'        => 'Statement Reports',
+            'route'         => 'dashboard.statement',
+            'icon'        => 'file-text-o',
+            'icon_color' => 'yellow',
         ],
         'ACCOUNT SETTINGS',
         [
             'text' => 'Users',
-            'url'  => '/users',
+            'route'  => 'users.index',
             'icon'        => 'users',
             'icon_color' => 'aqua',
         ],

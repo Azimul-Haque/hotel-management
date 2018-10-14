@@ -3,6 +3,12 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="icon" sizes="192x192" href="{{ asset('images/icon.png') }}">
+    <meta name="theme-color" content="#3C8CBB">
+    <meta name="msapplication-navbutton-color" content="#3C8CBB">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#3C8CBB">
+    <meta name="description" content="Official website of Queen Island Kitchen, Press Club Bulding, Bhola-8300, Bangladesh. &copy; {{ date('Y') }} Copyright Reserved. Developed By A. H. M. Azimul Haque. Slogan: *** FEEL THE FOOD ***"/>
     <title>@yield('title_prefix', config('adminlte.title_prefix', ''))
 @yield('title', config('adminlte.title', 'AdminLTE 2'))
 @yield('title_postfix', config('adminlte.title_postfix', ''))</title>
@@ -22,7 +28,7 @@
 
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/AdminLTE.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/stylesheet.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/stylesheet.css?time=23dasdsa') }}">
 
     @if(config('adminlte.plugins.datatables'))
         <!-- DataTables with bootstrap 3 style -->
@@ -63,6 +69,6 @@
 @endif
 
 @yield('adminlte_js')
-
+@include('partials._messages')
 </body>
 </html>

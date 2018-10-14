@@ -8,7 +8,8 @@
         "php": ">=5.5.9",
         "laravel/framework": "5.2.*",
         "jeroennoten/laravel-adminlte": "^1.19",
-        "laravelcollective/html": "5.2.*"
+        "laravelcollective/html": "5.2.*",
+        "niklasravnsborg/laravel-pdf": "^2.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

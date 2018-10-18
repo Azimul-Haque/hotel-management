@@ -47,7 +47,7 @@ class ReservationController extends Controller
         return redirect()->route('dashboard.index');
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         //validation
         $this->validate($request, array(
@@ -66,11 +66,11 @@ class ReservationController extends Controller
 
         // if rewuest is Vacant redirect to delete route
         if($request->reservation_status == 'Vacant') {
-          return redirect()->route('reservation.delete', $id); 
+          return redirect()->route('reservation.delete', $request->unique_key); 
         }
 
         //update to DB
-        $reservation = Reservation::find($id);
+        $reservation = Reservation::where('unique_key', $request->unique_key)->first();
         $reservation->unique_key = $request->unique_key;
         $reservation->date = $request->date;
         $reservation->room_name = $request->room_name;
@@ -89,9 +89,9 @@ class ReservationController extends Controller
         return redirect()->route('dashboard.index');
     }
 
-    public function delete($id)
+    public function delete($unique_key)
     {
-        $reservation = Reservation::find($id);
+        $reservation = Reservation::where('unique_key', $unique_key)->first();
         return view('dashboard.vacant')->withReservation($reservation);
     }
 
@@ -116,7 +116,6 @@ class ReservationController extends Controller
             } else {
                 return 'N/A';
             }
-            
         } 
         catch (\Exception $e) {
           return 'N/A';

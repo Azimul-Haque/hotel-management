@@ -24,7 +24,7 @@ Route::delete('/dashboard/blackouts/{id}', ['as' => 'dashboard.blackout.delete',
 
 // reservations...
 Route::post('/reservation/store', ['as' => 'reservation.store', 'uses' => 'ReservationController@store']);
-Route::put('/reservation/update/{id}', ['as' => 'reservation.update', 'uses' => 'ReservationController@update']);
+Route::post('/reservation/update', ['as' => 'reservation.update', 'uses' => 'ReservationController@update']);
 Route::get('/reservation/vacant/{id}', ['as' => 'reservation.delete', 'uses' => 'ReservationController@delete']);
 Route::delete('/reservation/vacant/{id}', ['as' => 'reservation.destroy', 'uses' => 'ReservationController@destroy']);
 

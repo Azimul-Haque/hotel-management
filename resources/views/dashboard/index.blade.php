@@ -65,10 +65,6 @@
       </td>
       @endfor
     </tr>
-    {{-- flag to reopen the modal --}}
-    @php $flagModal = 0; @endphp
-    {{-- flag to reopen the modal --}}
-
     @for($i=0; $i<11;$i++)
     <tr>
       @for($j=-15; $j<16;$j++)
@@ -152,154 +148,242 @@
           @endphp
         @endif
         @endforeach
-        <td style="{{ $css }}" data-toggle="modal" @if($availability != 'N/A') data-target="#openModal{{ $unique_key }}" data-backdrop="static" @endif>
+        <td style="{{ $css }}" @if($availability != 'N/A') data-toggle="modal" data-target="#openModal{{ $unique_key }}" data-backdrop="static" onclick="showaddFormModal('{{ $unique_key }}', '{{ $room_name }}', '{{ date('F d, Y', strtotime(Carbon::today()->addDays($j))) }}', '{{ $blackout_day_occation }}', '{{ $reservation_data }}', '{{ Carbon::today()->addDays($j) }}', '{{ $availability }}')" @endif>
           {!! $availability !!}
         </td>
-      
-      @if($availability != 'N/A')
-      {{-- Modal --}}
-      <div class="modal fade" id="openModal{{ $unique_key }}" role="dialog">
-        <div class="modal-dialog modal-md">
-          <div class="modal-content">
-            <div class="modal-header modal-header-success">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 class="modal-title">
-                <i class="fa fa-bed" aria-hidden="true"></i>
-                {{ $room_name }}, 
-                <i class="fa fa-calendar" aria-hidden="true"></i> {{ date('F d, Y', strtotime(Carbon::today()->addDays($j))) }}
-              </h4>
-            </div>
-            <div class="modal-body">
-              <center><small style=""><u><b>{{ $blackout_day_occation }}</b></u></small></center>
-              @if($reservation_data == null)
-              {!! Form::open(['route' => 'reservation.store', 'method' => 'POST']) !!}
-              @else
-              {!! Form::model($reservation_data, ['route' => ['reservation.update', $reservation_data->id], 'method' => 'PUT']) !!}
-              @endif
-                {!! Form::hidden('unique_key', $unique_key) !!}
-                {!! Form::hidden('date', Carbon::today()->addDays($j)) !!}
-                {!! Form::hidden('room_name', $room_name) !!}
-                <div class="form-group">
-                  {!! Form::label('reservation_status', 'Reservation Status:') !!}
-                  <select name="reservation_status" class="form-control" id="reservation_status_selected_{{ $unique_key }}">
-                    <option value="" selected="" disabled="">Select Reservation Status</option>
-                    <option value="Booked" 
-                    @if($reservation_data == true && $reservation_data->reservation_status == 'Booked')
-                      selected="" 
-                    @endif
-                    >Booked</option>
-                    <option value="Paid"
-                    @if($reservation_data == true && $reservation_data->reservation_status == 'Paid')
-                      selected="" 
-                    @endif
-                    >Paid</option>
-                    @if($reservation_data == true && $reservation_data->reservation_status == 'Booked')
-                      <option value="Vacant" style="background: #ef9a9a; color: #000;">Vacant</option>
-                    @endif
-                  </select> 
-                </div>
-                <div class="form-group">
-                  {!! Form::label('name', 'Guest Name:') !!} 
-                    @if($availability == 'Available')
-                      <input type="hidden" id="copy_unique_key{{ $unique_key }}" value="{{ $unique_key }}">
-                      <input type="hidden" id="copy_date{{ $unique_key }}" value="{{ Carbon::today()->addDays($j) }}">
-                      <button type="button" class="btn btn-success btn-xs" id="copy_data_{{ $unique_key }}"><i class="fa fa-fw fa-clone" aria-hidden="true"></i>Copy guest data from Yesterday</button>
-                      <script type="text/javascript">
-                        $(document).ready(function(){
-                          $("#copy_data_{{ $unique_key }}").click(function(){
-                            $.get(window.location.protocol + "//" + window.location.host + "/reservation/yesterday/getdata/" + $('#copy_unique_key{{ $unique_key }}').val()+"/"+$('#copy_date{{ $unique_key }}').val(), function(data, status){
-                                if(data != 'N/A') {
-                                  $("#paste_name{{ $unique_key }}").val(data.name);
-                                  $("#paste_email{{ $unique_key }}").val(data.email);
-                                  $("#paste_phone{{ $unique_key }}").val(data.phone);
-                                  console.log('nicely done!');
-                                }
-                            });
-                          });
-                        });
-                      </script>
-                    @endif
-                  {!! Form::text('name', null, array('class' => 'form-control', 'placeholder' => 'Guest Name', 'required' => '', 'id' => 'paste_name'.$unique_key)) !!}
-                </div>
-                <div class="form-group">
-                  {!! Form::label('email', 'Email Address:') !!}
-                  {!! Form::text('email', null, array('class' => 'form-control', 'placeholder' => 'Email Address', 'required' => '', 'id' => 'paste_email'.$unique_key)) !!}
-                </div>
-                <div class="form-group">
-                  {!! Form::label('phone', 'Contact Number:') !!}
-                  {!! Form::text('phone', null, array('class' => 'form-control', 'placeholder' => 'Contact Number', 'required' => '', 'id' => 'paste_phone'.$unique_key)) !!}
-                </div>
-                <h4><i class="fa fa-handshake-o" aria-hidden="true"></i> <u>Financial Data</u></h4>
-                <div class="row">
-                  <div class="col-md-6 col-sm-6 col-xs-6">
-                    <div class="form-group">
-                      {!! Form::label('price', 'Room Price:') !!}
-                      {!! Form::text('price', null, array('class' => 'form-control', 'placeholder' => 'Room Price', 'required' => '', 'id' => 'price'.$unique_key )) !!}
-                    </div>
-                  </div>
-                  <div class="col-md-6 col-sm-6 col-xs-6">
-                    <div class="form-group">
-                      {!! Form::label('discount', 'Discount:') !!}
-                      {!! Form::text('discount', null, array('class' => 'form-control', 'placeholder' => 'Discount', 'required' => '', 'id' => 'discount'.$unique_key)) !!}
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-6 col-sm-6 col-xs-6">
-                    <div class="form-group">
-                      {!! Form::label('advance', 'Advance:') !!}
-                      {!! Form::text('advance', null, array('class' => 'form-control', 'placeholder' => 'Advance', 'required' => '', 'id' => 'advance'.$unique_key)) !!}
-                    </div>
-                  </div>
-                  <div class="col-md-6 col-sm-6 col-xs-6">
-                    <div class="form-group">
-                      {!! Form::label('due', 'Due:') !!}
-                      {!! Form::text('due', null, array('class' => 'form-control', 'placeholder' => 'Due', 'required' => '', 'id' => 'due'.$unique_key)) !!}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="modal-footer">
-                  {!! Form::submit('Save', array('class' => 'btn btn-success')) !!}
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-              </div>
-              {!! Form::close() !!}
-              <script type="text/javascript">
-                $(document).ready(function(){
-                  $("#reservation_status_selected_{{ $unique_key }}").change(function(){
-                    if($(this).val() == 'Booked') {
-                      $('#price{{ $unique_key }}').val(0);
-                      $('#discount{{ $unique_key }}').val(0);
-                      $('#advance{{ $unique_key }}').val(0);
-                      $('#due{{ $unique_key }}').val(0);
-                    }
-                  });
-                }); 
-              </script>
-            </div>
-          </div>
-        </div>
-
-        @if ((count($errors) > 0) && ($flagModal == 0))
-          <script>
-              $( document ).ready(function() {
-                  $('#openModal{{ $unique_key }}').modal('show');
-              });
-          </script>
-          @php $flagModal = 1; @endphp
-        @endif
-      {{-- Modal --}}
-      @endif
-
       @endfor
     </tr>
     @endfor
   </table>
 </div>
+
+{{-- add Modal --}}
+<div class="modal fade" id="addFormModal" role="dialog">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header modal-header-success">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">
+          <i class="fa fa-bed" aria-hidden="true"></i>
+          <span id="add_modal_room_name"></span>, 
+          <i class="fa fa-calendar" aria-hidden="true"></i> <span id="add_modal_today_date_with_format"></span>
+        </h4>
+      </div>
+      <div class="modal-body">
+        <center><small style=""><u><b><span id="add_modal_blackout_day_occation"></span></b></u></small></center>
+        {!! Form::open(['route' => 'reservation.store', 'method' => 'POST']) !!}
+          {!! Form::hidden('post_type', 'new') !!}
+          {!! Form::hidden('unique_key', null, ['id' => 'add_modal_hidden_unique_key']) !!}
+          {!! Form::hidden('date', null, ['id' => 'add_modal_hidden_date']) !!}
+          {!! Form::hidden('room_name', null, ['id' => 'add_modal_hidden_room_name']) !!}
+          <div class="form-group">
+            {!! Form::label('reservation_status', 'Reservation Status:') !!}
+            <select name="reservation_status" class="form-control" id="add_reservation_status_selected">
+              <option value="" selected="" disabled="">Select Reservation Status</option>
+              <option value="Booked">Booked</option>
+              <option value="Paid">Paid</option>
+            </select> 
+          </div>
+          <div class="form-group">
+            {!! Form::label('name', 'Guest Name:') !!}
+            {{-- if available and previous data exists --}}
+            <button type="button" class="btn btn-success btn-xs" id="copy_data_yesterday" style="display: none;"><i class="fa fa-fw fa-clone" aria-hidden="true"></i>Copy guest data from Yesterday</button>
+            {{-- if available and previous data exists --}}
+            {!! Form::text('name', null, array('class' => 'form-control', 'placeholder' => 'Guest Name', 'required' => '', 'id' => 'add_name')) !!}
+          </div>
+          <div class="form-group">
+            {!! Form::label('email', 'Email Address:') !!}
+            {!! Form::text('email', null, array('class' => 'form-control', 'placeholder' => 'Email Address', 'required' => '', 'id' => 'add_email')) !!}
+          </div>
+          <div class="form-group">
+            {!! Form::label('phone', 'Contact Number:') !!}
+            {!! Form::text('phone', null, array('class' => 'form-control', 'placeholder' => 'Contact Number', 'required' => '', 'id' => 'add_phone')) !!}
+          </div>
+          <h4><i class="fa fa-handshake-o" aria-hidden="true"></i> <u>Financial Data</u></h4>
+          <div class="row">
+            <div class="col-md-6 col-sm-6 col-xs-6">
+              <div class="form-group">
+                {!! Form::label('price', 'Room Price:') !!}
+                {!! Form::text('price', null, array('class' => 'form-control', 'placeholder' => 'Room Price', 'required' => '', 'id' => 'add_price' )) !!}
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-6">
+              <div class="form-group">
+                {!! Form::label('discount', 'Discount:') !!}
+                {!! Form::text('discount', null, array('class' => 'form-control', 'placeholder' => 'Discount', 'required' => '', 'id' => 'add_discount')) !!}
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 col-sm-6 col-xs-6">
+              <div class="form-group">
+                {!! Form::label('advance', 'Advance:') !!}
+                {!! Form::text('advance', null, array('class' => 'form-control', 'placeholder' => 'Advance', 'required' => '', 'id' => 'add_advance')) !!}
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-6">
+              <div class="form-group">
+                {!! Form::label('due', 'Due:') !!}
+                {!! Form::text('due', null, array('class' => 'form-control', 'placeholder' => 'Due', 'required' => '', 'id' => 'add_due')) !!}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+            {!! Form::submit('Save', array('class' => 'btn btn-success')) !!}
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        </div>
+      {!! Form::close() !!}
+    </div>
+  </div>
+</div>
+{{-- add Modal --}}
+
+{{-- edit Modal --}}
+<div class="modal fade" id="editFormModal" role="dialog">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header modal-header-success">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">
+          <i class="fa fa-bed" aria-hidden="true"></i>
+          <span id="edit_modal_room_name"></span>, 
+          <i class="fa fa-calendar" aria-hidden="true"></i> <span id="edit_modal_today_date_with_format"></span>
+        </h4>
+      </div>
+      <div class="modal-body">
+        <center><small style=""><u><b><span id="edit_modal_blackout_day_occation"></span></b></u></small></center>
+      {!! Form::open(['route' => 'reservation.update', 'method' => 'POST']) !!}
+        {!! Form::hidden('post_type', 'edit') !!}
+        {!! Form::hidden('unique_key', null, ['id' => 'edit_modal_hidden_unique_key']) !!}
+        {!! Form::hidden('date', null, ['id' => 'edit_modal_hidden_date']) !!}
+        {!! Form::hidden('room_name', null, ['id' => 'edit_modal_hidden_room_name']) !!}
+        <div class="form-group">
+          {!! Form::label('reservation_status', 'Reservation Status:') !!}
+          <select name="reservation_status" class="form-control" id="edit_reservation_status_selected">
+            <option value="" selected="" disabled="">Select Reservation Status</option>
+            <option value="Booked">Booked</option>
+            <option value="Paid">Paid</option>
+            <option value="Vacant" style="display: none;" id="edit_modal_hidden_vacant">Vacant</option>
+          </select> 
+        </div>
+        <div class="form-group">
+          {!! Form::label('name', 'Guest Name:') !!} 
+          {!! Form::text('name', null, array('class' => 'form-control', 'placeholder' => 'Guest Name', 'required' => '', 'id' => 'edit_name')) !!}
+        </div>
+        <div class="form-group">
+          {!! Form::label('email', 'Email Address:') !!}
+          {!! Form::text('email', null, array('class' => 'form-control', 'placeholder' => 'Email Address', 'required' => '', 'id' => 'edit_email')) !!}
+        </div>
+        <div class="form-group">
+          {!! Form::label('phone', 'Contact Number:') !!}
+          {!! Form::text('phone', null, array('class' => 'form-control', 'placeholder' => 'Contact Number', 'required' => '', 'id' => 'edit_phone')) !!}
+        </div>
+        <h4><i class="fa fa-handshake-o" aria-hidden="true"></i> <u>Financial Data</u></h4>
+        <div class="row">
+          <div class="col-md-6 col-sm-6 col-xs-6">
+            <div class="form-group">
+              {!! Form::label('price', 'Room Price:') !!}
+              {!! Form::text('price', null, array('class' => 'form-control', 'placeholder' => 'Room Price', 'required' => '', 'id' => 'edit_price' )) !!}
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-6">
+            <div class="form-group">
+              {!! Form::label('discount', 'Discount:') !!}
+              {!! Form::text('discount', null, array('class' => 'form-control', 'placeholder' => 'Discount', 'required' => '', 'id' => 'edit_discount')) !!}
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 col-sm-6 col-xs-6">
+            <div class="form-group">
+              {!! Form::label('advance', 'Advance:') !!}
+              {!! Form::text('advance', null, array('class' => 'form-control', 'placeholder' => 'Advance', 'required' => '', 'id' => 'edit_advance')) !!}
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-6">
+            <div class="form-group">
+              {!! Form::label('due', 'Due:') !!}
+              {!! Form::text('due', null, array('class' => 'form-control', 'placeholder' => 'Due', 'required' => '', 'id' => 'edit_due')) !!}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+          {!! Form::submit('Save', array('class' => 'btn btn-success')) !!}
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+      {!! Form::close() !!}
+    </div>
+  </div>
+</div>
+{{-- edit Modal --}}
+
 @stop
 
 @section('js')
   <script type="text/javascript">
+    function showaddFormModal(unique_key, room_name, date, blackout_day_occation, reservation_data, hidden_date, availability) {
+      $(':input').not(':input[type="hidden"], :checkbox, :submit').val('');
+      $('#copy_data_yesterday').css('display', 'none');
+      if(reservation_data == '') {
+        $('#add_modal_room_name').text(room_name);
+        $('#add_modal_today_date_with_format').text(date);
+        $('#add_modal_blackout_day_occation').text(blackout_day_occation);
+
+        $('#add_modal_hidden_unique_key').val(unique_key);
+        $('#add_modal_hidden_date').val(hidden_date);
+        $('#add_modal_hidden_room_name').val(room_name);
+        if(availability == 'Available') {
+          $.get(window.location.protocol + "//" + window.location.host + "/reservation/yesterday/getdata/" + unique_key + "/" + hidden_date, function(data, status){
+              if(data != 'N/A') {
+                $('#copy_data_yesterday').css('display', '');
+                $('#copy_data_yesterday').attr('onclick', 'fillDataYesterday("' + unique_key + '","'+ hidden_date +'")');
+              }
+          });
+        }
+        $('#addFormModal').modal({backdrop: "static"});
+
+      } else {
+        $('#edit_modal_room_name').text(room_name);
+        $('#edit_modal_today_date_with_format').text(date);
+        $('#edit_modal_blackout_day_occation').text(blackout_day_occation);
+
+        reservation_data = JSON.parse(reservation_data);
+
+        $('#edit_modal_hidden_unique_key').val(unique_key);
+        $('#edit_modal_hidden_date').val(hidden_date);
+        $('#edit_modal_hidden_room_name').val(room_name);
+        $('#edit_reservation_status_selected').val(reservation_data.reservation_status);
+        if($('#edit_reservation_status_selected').val() == 'Booked') {
+          $('#edit_modal_hidden_vacant').css('display', 'block');
+          $('#edit_modal_hidden_vacant').css('background', '#ef9a9a');
+          $('#edit_modal_hidden_vacant').css('color', '#000');
+        }
+        $('#edit_name').val(reservation_data.name);
+        $('#edit_email').val(reservation_data.email);
+        $('#edit_phone').val(reservation_data.phone);
+        $('#edit_price').val(reservation_data.price);
+        $('#edit_discount').val(reservation_data.discount);
+        $('#edit_advance').val(reservation_data.advance);
+        $('#edit_due').val(reservation_data.due);
+        
+        $('#editFormModal').modal({backdrop: "static"});
+        // console.log(reservation_data);
+      }
+    }
+
+    function fillDataYesterday(unique_key, hidden_date) {
+      $.get(window.location.protocol + "//" + window.location.host + "/reservation/yesterday/getdata/" + unique_key + "/" + hidden_date, function(data, status){
+          if(data != 'N/A') {
+            $('#add_name').val(data.name);
+            $('#add_email').val(data.email);
+            $('#add_phone').val(data.phone);
+          }
+      });
+    }
+
+
     $('.table-fixed-right-side td:nth-child(16)').addClass('today');
     $(document).ready(function(){
       let offset = $('.today').position().left;
@@ -313,4 +397,34 @@
       }, 300);
     })
   </script>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $("#add_reservation_status_selected").change(function(){
+        if($(this).val() == 'Booked') {
+          $('#add_price').val(0);
+          $('#add_discount').val(0);
+          $('#add_advance').val(0);
+          $('#add_due').val(0);
+        }
+      });
+    }); 
+  </script>
+  @if (count($errors) > 0 && (old('post_type') == 'new'))
+  <script>
+    $( document ).ready(function() {
+        $('#addFormModal').modal({backdrop: "static"});
+        $('#add_modal_room_name').text('{{ old('room_name') }}');
+        $('#add_modal_today_date_with_format').text('{{ date('F d, Y', strtotime(old('date'))) }}');
+    });
+  </script>
+  @endif
+  @if (count($errors) > 0 && (old('post_type') == 'edit'))
+  <script>
+    $( document ).ready(function() {
+        $('#editFormModal').modal({backdrop: "static"});
+        $('#edit_modal_room_name').text('{{ old('room_name') }}');
+        $('#edit_modal_today_date_with_format').text('{{ date('F d, Y', strtotime(old('date'))) }}');
+    });
+  </script>
+  @endif
 @stop

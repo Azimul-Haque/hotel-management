@@ -148,7 +148,7 @@
           @endphp
         @endif
         @endforeach
-        <td style="{{ $css }}" @if($availability != 'N/A') data-toggle="modal" data-target="#openModal{{ $unique_key }}" data-backdrop="static" onclick="showaddFormModal('{{ $unique_key }}', '{{ $room_name }}', '{{ date('F d, Y', strtotime(Carbon::today()->addDays($j))) }}', '{{ $blackout_day_occation }}', '{{ $reservation_data }}', '{{ Carbon::today()->addDays($j) }}', '{{ $availability }}')" @endif>
+        <td style="{{ $css }}" @if($availability != 'N/A') onclick="showaddFormModal('{{ $unique_key }}', '{{ $room_name }}', '{{ date('F d, Y', strtotime(Carbon::today()->addDays($j))) }}', '{{ $blackout_day_occation }}', '{{ $reservation_data }}', '{{ Carbon::today()->addDays($j) }}', '{{ $availability }}')" @endif>
           {!! $availability !!}
         </td>
       @endfor

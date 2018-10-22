@@ -204,27 +204,27 @@
             <div class="col-md-6 col-sm-6 col-xs-6">
               <div class="form-group">
                 {!! Form::label('price', 'Room Price:') !!}
-                {!! Form::text('price', null, array('class' => 'form-control', 'placeholder' => 'Room Price', 'required' => '', 'id' => 'add_price' )) !!}
+                {!! Form::number('price', null, array('class' => 'form-control', 'placeholder' => 'Room Price', 'required' => '', 'id' => 'add_price', 'min' => '0', 'step' => 'any', 'autocomplete' => 'off')) !!}
               </div>
             </div>
             <div class="col-md-6 col-sm-6 col-xs-6">
               <div class="form-group">
                 {!! Form::label('discount', 'Discount:') !!}
-                {!! Form::text('discount', null, array('class' => 'form-control', 'placeholder' => 'Discount', 'required' => '', 'id' => 'add_discount')) !!}
+                {!! Form::number('discount', null, array('class' => 'form-control', 'placeholder' => 'Discount', 'required' => '', 'id' => 'add_discount', 'min' => '0', 'step' => 'any', 'autocomplete' => 'off')) !!}
               </div>
             </div>
           </div>
           <div class="row">
             <div class="col-md-6 col-sm-6 col-xs-6">
               <div class="form-group">
-                {!! Form::label('advance', 'Advance:') !!}
-                {!! Form::text('advance', null, array('class' => 'form-control', 'placeholder' => 'Advance', 'required' => '', 'id' => 'add_advance')) !!}
+                {!! Form::label('advance', 'Advance/ Paid:') !!}
+                {!! Form::number('advance', null, array('class' => 'form-control', 'placeholder' => 'Advance', 'required' => '', 'id' => 'add_advance', 'min' => '0', 'step' => 'any', 'autocomplete' => 'off')) !!}
               </div>
             </div>
             <div class="col-md-6 col-sm-6 col-xs-6">
               <div class="form-group">
                 {!! Form::label('due', 'Due:') !!}
-                {!! Form::text('due', null, array('class' => 'form-control', 'placeholder' => 'Due', 'required' => '', 'id' => 'add_due')) !!}
+                {!! Form::number('due', null, array('class' => 'form-control', 'placeholder' => 'Due', 'required' => '', 'id' => 'add_due', 'min' => '0', 'step' => 'any', 'autocomplete' => 'off')) !!}
               </div>
             </div>
           </div>
@@ -284,27 +284,27 @@
           <div class="col-md-6 col-sm-6 col-xs-6">
             <div class="form-group">
               {!! Form::label('price', 'Room Price:') !!}
-              {!! Form::text('price', null, array('class' => 'form-control', 'placeholder' => 'Room Price', 'required' => '', 'id' => 'edit_price' )) !!}
+              {!! Form::number('price', null, array('class' => 'form-control', 'placeholder' => 'Room Price', 'required' => '', 'id' => 'edit_price', 'min' => '0', 'step' => 'any', 'autocomplete' => 'off')) !!}
             </div>
           </div>
           <div class="col-md-6 col-sm-6 col-xs-6">
             <div class="form-group">
               {!! Form::label('discount', 'Discount:') !!}
-              {!! Form::text('discount', null, array('class' => 'form-control', 'placeholder' => 'Discount', 'required' => '', 'id' => 'edit_discount')) !!}
+              {!! Form::number('discount', null, array('class' => 'form-control', 'placeholder' => 'Discount', 'required' => '', 'id' => 'edit_discount', 'min' => '0', 'step' => 'any', 'autocomplete' => 'off')) !!}
             </div>
           </div>
         </div>
         <div class="row">
           <div class="col-md-6 col-sm-6 col-xs-6">
             <div class="form-group">
-              {!! Form::label('advance', 'Advance:') !!}
-              {!! Form::text('advance', null, array('class' => 'form-control', 'placeholder' => 'Advance', 'required' => '', 'id' => 'edit_advance')) !!}
+              {!! Form::label('advance', 'Advance/ Paid:') !!}
+              {!! Form::number('advance', null, array('class' => 'form-control', 'placeholder' => 'Advance', 'required' => '', 'id' => 'edit_advance', 'min' => '0', 'step' => 'any', 'autocomplete' => 'off')) !!}
             </div>
           </div>
           <div class="col-md-6 col-sm-6 col-xs-6">
             <div class="form-group">
               {!! Form::label('due', 'Due:') !!}
-              {!! Form::text('due', null, array('class' => 'form-control', 'placeholder' => 'Due', 'required' => '', 'id' => 'edit_due')) !!}
+              {!! Form::number('due', null, array('class' => 'form-control', 'placeholder' => 'Due', 'required' => '', 'id' => 'edit_due', 'min' => '0', 'step' => 'any', 'autocomplete' => 'off')) !!}
             </div>
           </div>
         </div>
@@ -406,6 +406,48 @@
           $('#add_advance').val(0);
           $('#add_due').val(0);
         }
+      });
+      $("#add_price").keyup(function(){
+        price = parseFloat($('#add_price').val()) || 0;
+        discount = parseFloat($('#add_discount').val())  || 0;
+        advance = parseFloat($('#add_advance').val())  || 0;
+        due = price - (discount + advance);
+        $('#add_due').val(due);
+      });
+      $("#add_discount").keyup(function(){
+        price = parseFloat($('#add_price').val()) || 0;
+        discount = parseFloat($('#add_discount').val()) || 0;
+        advance = parseFloat($('#add_advance').val()) || 0;
+        due = price - (discount + advance);
+        $('#add_due').val(due);
+      });
+      $("#add_advance").keyup(function(){
+        price = parseFloat($('#add_price').val()) || 0;
+        discount = parseFloat($('#add_discount').val()) || 0;
+        advance = parseFloat($('#add_advance').val()) || 0;
+        due = price - (discount + advance);
+        $('#add_due').val(due);
+      });
+      $("#edit_price").keyup(function(){
+        price = parseFloat($('#edit_price').val()) || 0;
+        discount = parseFloat($('#edit_discount').val())  || 0;
+        advance = parseFloat($('#edit_advance').val())  || 0;
+        due = price - (discount + advance);
+        $('#edit_due').val(due);
+      });
+      $("#edit_discount").keyup(function(){
+        price = parseFloat($('#edit_price').val()) || 0;
+        discount = parseFloat($('#edit_discount').val()) || 0;
+        advance = parseFloat($('#edit_advance').val()) || 0;
+        due = price - (discount + advance);
+        $('#edit_due').val(due);
+      });
+      $("#edit_advance").keyup(function(){
+        price = parseFloat($('#edit_price').val()) || 0;
+        discount = parseFloat($('#edit_discount').val()) || 0;
+        advance = parseFloat($('#edit_advance').val()) || 0;
+        due = price - (discount + advance);
+        $('#edit_due').val(due);
       });
     }); 
   </script>

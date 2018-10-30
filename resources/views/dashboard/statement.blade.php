@@ -1,13 +1,13 @@
 @extends('adminlte::page')
 
-@section('title', 'GaanChil | Statement Reports')
+@section('title', 'Gungchil | Statement Reports')
 
 @section('css')
   <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-datepicker.min.css') }}">
 @stop
 
 @section('content_header')
-    <h1>Statement Reports</h1>
+    <h1>Reports</h1>
 @stop
 
 @section('content')

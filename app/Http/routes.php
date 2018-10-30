@@ -43,3 +43,4 @@ Route::get('/dashboard/statement/roomwise/pdf', ['as' => 'dashboard.roomwisetate
 Route::auth();
 
 Route::resource('users','UserController');
+Route::get('/profile', ['as' => 'dashboard.profile', 'uses' => 'UserController@getProfile']);

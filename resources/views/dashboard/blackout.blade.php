@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'GaanChil | Blackout Days')
+@section('title', 'Gungchil | Blackout Days')
 
 @section('css')
   <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-datepicker.min.css') }}">

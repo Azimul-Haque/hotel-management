@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'title' => 'Gaanchil',
+    'title' => 'Gungchil',
 
     'title_prefix' => '',
 
@@ -30,7 +30,7 @@ return [
     |
     */
 
-    'logo' => '<b>Gaan</b>Chil',
+    'logo' => '<b>Gung</b>chil',
 
     'logo_mini' => '<b>G</b>C',
 
@@ -122,7 +122,7 @@ return [
             'icon_color' => 'aqua',
         ],
         [
-            'text'        => 'Statement Reports',
+            'text'        => 'Reports',
             'route'         => 'dashboard.statement',
             'icon'        => 'file-text-o',
             'icon_color' => 'yellow',
@@ -136,27 +136,14 @@ return [
         ],
         [
             'text' => 'Profile',
-            'url'  => 'admin/settings',
+            'route'  => 'dashboard.profile',
             'icon' => 'user',
         ],
         [
             'text' => 'Change Password',
             'url'  => 'admin/settings',
             'icon' => 'lock',
-        ],
-        'LABELS',
-        [
-            'text'       => 'Important',
-            'icon_color' => 'red',
-        ],
-        [
-            'text'       => 'Warning',
-            'icon_color' => 'yellow',
-        ],
-        [
-            'text'       => 'Information',
-            'icon_color' => 'aqua',
-        ],
+        ]
     ],
 
     /*

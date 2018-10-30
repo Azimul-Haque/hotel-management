@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'GaanChil | Dashboard')
+@section('title', 'Gungchil | Dashboard')
 
 @section('css')
   <link rel="stylesheet" type="text/css" href="{{ asset('css/dashboard.css') }}">
@@ -178,7 +178,7 @@
           {!! Form::hidden('room_name', null, ['id' => 'add_modal_hidden_room_name']) !!}
           <div class="form-group">
             {!! Form::label('reservation_status', 'Reservation Status:') !!}
-            <select name="reservation_status" class="form-control" id="add_reservation_status_selected">
+            <select name="reservation_status" class="form-control" id="add_reservation_status_selected" required="">
               <option value="" selected="" disabled="">Select Reservation Status</option>
               <option value="Booked">Booked</option>
               <option value="Paid">Paid</option>
@@ -260,7 +260,7 @@
         {!! Form::hidden('room_name', null, ['id' => 'edit_modal_hidden_room_name']) !!}
         <div class="form-group">
           {!! Form::label('reservation_status', 'Reservation Status:') !!}
-          <select name="reservation_status" class="form-control" id="edit_reservation_status_selected">
+          <select name="reservation_status" class="form-control" id="edit_reservation_status_selected" required="">
             <option value="" selected="" disabled="">Select Reservation Status</option>
             <option value="Booked">Booked</option>
             <option value="Paid">Paid</option>

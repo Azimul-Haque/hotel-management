@@ -56,13 +56,29 @@
                <!-- Navbar Right Menu -->
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
-                        <li class="dropdown user user-menu"><a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                        <li class="dropdown user user-menu">
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                            @if(Auth::user()->image != null || Auth::user()->image != '')
+                            <img src="{{ asset('images/users/'.Auth::user()->image) }}" class="user-image" alt="User Image">
+                            @else
                             <img src="{{ asset('images/user.png')}}" class="user-image" alt="User Image">
-                            {{ Auth::User()->name }}</a>
+                            @endif
+                            <span class="hidden-xs">{{ Auth::User()->name }}</span>
+                            @php
+                              $nav_name = explode(' ', Auth::User()->name);
+                              $last_name = array_pop($nav_name);
+                            @endphp
+                            <span class="visible-xs-inline">{{ $last_name }}</span>
+                          </a>
                             <ul class="dropdown-menu" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
                               <!-- User image -->
                               <li class="user-header">
-                                <img src="{{ asset('images/user.png') }}" class="img-circle" alt="User Image">
+                                @if(Auth::user()->image != null || Auth::user()->image != '')
+                                  <img src="{{ asset('images/users/'.Auth::user()->image) }}" class="img-circle" alt="User Image">
+                                @else
+                                  <img src="{{ asset('images/user.png') }}" class="img-circle" alt="User Image">
+                                @endif
+                                
                                 <p>
                                   {{ Auth::User()->name }}
                                   <small>Member since {{ date('F, Y', strtotime(Auth::User()->created_at)) }}</small>
@@ -86,7 +102,7 @@
                               <!-- Menu Footer-->
                               <li class="user-footer">
                                 <div class="pull-left">
-                                  <a href="{{ route('users.edit', Auth::User()->id) }}" class="btn btn-default btn-flat">Profile</a>
+                                  <a href="{{ route('dashboard.profile') }}" class="btn btn-default btn-flat">Profile</a>
                                 </div>
                                 <div class="pull-right">
                                   @if(config('adminlte.logout_method') == 'GET' || !config('adminlte.logout_method') && version_compare(\Illuminate\Foundation\Application::VERSION, '5.3.0', '<'))

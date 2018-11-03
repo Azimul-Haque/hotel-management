@@ -10,7 +10,14 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-
+Route::get('/clear', function() {
+    Artisan::call('cache:clear');
+    Artisan::call('optimize');
+    Artisan::call('config:cache');
+    Artisan::call('key:generate');
+    echo 'All done!';
+    // return what you want
+});
 Route::get('/', ['as' => 'dashboard.index', 'uses' => 'DashboardController@index']);
 Route::get('/dashboard', ['as' => 'dashboard.index', 'uses' => 'DashboardController@index']);
 

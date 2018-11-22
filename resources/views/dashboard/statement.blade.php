@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Gungchil | Statement Reports')
+@section('title', 'MeghKabbo | Statement Reports')
 
 @section('css')
   <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-datepicker.min.css') }}">

@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Gungchil | Users')
+@section('title', 'MeghKabbo | Users')
 
 @section('css')
 <script src="{{ asset('vendor/adminlte/vendor/jquery/dist/jquery.min.js') }}"></script>

@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Gungchil | Dashboard')
+@section('title', 'MeghKabbo | Dashboard')
 
 @section('css')
   <link rel="stylesheet" type="text/css" href="{{ asset('css/dashboard.css') }}">

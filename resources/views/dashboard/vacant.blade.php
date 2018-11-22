@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Gungchil | Vacant Room')
+@section('title', 'MeghKabbo | Vacant Room')
 
 @section('content_header')
     <h1>Vacant Confirmation</h1>

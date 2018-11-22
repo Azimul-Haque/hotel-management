@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Gungchil | Users')
+@section('title', 'MeghKabbo | Profile')
 
 @section('content_header')
     <h1>Profile</h1>

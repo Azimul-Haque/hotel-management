@@ -12,6 +12,7 @@ use Session;
 
 use Illuminate\Support\Facades\DB;
 use PDF;
+use Illuminate\Support\Collection;
 
 class DashboardController extends Controller
 {
@@ -107,6 +108,14 @@ class DashboardController extends Controller
         return redirect()->route('dashboard.blackout');
     }
 
+    public function getInvoicePage() {
+        $lasttenthdate = \Carbon\Carbon::today()->subDays(10);
+        $reservations = Reservation::where('created_at', '>=', $lasttenthdate)
+                                   ->orderBy('date', 'desc')
+                                   ->get();
+        return view('dashboard.invoices')->withReservations($reservations);
+    }
+
     public function getStement() {
         $reservation_months = DB::table('reservations')
                                 ->select('date')
@@ -185,5 +194,37 @@ class DashboardController extends Controller
         $pdf = PDF::loadView('reports.pdf.roomwise', ['roomwisereservation' => $roomwisereservation], ['data' => [$request->room_name, date("F Y", strtotime($request->month)), $roomwisereservation_total->totalprice, $roomwisereservation_total->totaldiscount, $roomwisereservation_total->totaladvance, $roomwisereservation_total->totaldue]]);
         $fileName = strtok($request->room_name, ' ').'_'.date("F_Y", strtotime($request->month)) . '.pdf';
         return $pdf->stream($fileName);
+    }
+
+    public function generateInvoice(Request $request)
+    {
+        
+        $this->validate($request, array(
+          'name' => 'required',
+          'email' => 'required',
+          'phone' => 'required',
+          'room_type' => 'required',
+          'checkin' => 'required',
+          'checkout' => 'required',
+          'booked_by' => 'required',
+          'price' => 'required',
+          'discount' => 'required',
+          'advance' => 'required',
+          'due' => 'required',
+          'payment_method' => 'required',
+          'note' => 'sometimes',
+        ));
+
+        
+        $invoicedata = $request;
+        $pdf = PDF::loadView('dashboard.pdf.invoice', ['invoicedata' => $invoicedata]);
+        $fileName = 'Invoice.pdf';
+        return $pdf->stream($fileName);
+        
+    }
+
+    public function searchPNR()
+    {
+        
     }
 }

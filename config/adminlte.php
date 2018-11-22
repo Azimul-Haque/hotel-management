@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'title' => 'Gungchil',
+    'title' => 'MeghKabbo',
 
     'title_prefix' => '',
 
@@ -30,9 +30,9 @@ return [
     |
     */
 
-    'logo' => '<b>Gung</b>chil',
+    'logo' => '<b>Megh</b>Kabbo',
 
-    'logo_mini' => '<b>G</b>C',
+    'logo_mini' => '<b>M</b>K',
 
     /*
     |--------------------------------------------------------------------------
@@ -120,6 +120,12 @@ return [
             'route'         => 'dashboard.blackout',
             'icon'        => 'calendar-times-o',
             'icon_color' => 'aqua',
+        ],
+        [
+            'text'        => 'Invoice Generation',
+            'route'         => 'dashboard.invoice',
+            'icon'        => 'address-card-o',
+            'icon_color' => 'lightgreen',
         ],
         [
             'text'        => 'Reports',

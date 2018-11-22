@@ -58,6 +58,25 @@
                     <ul class="nav navbar-nav">
                         <li class="dropdown user user-menu">
                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                            <span class="hidden-xs"><i class="fa fa-search fa-fw"></i> PNR Search</span>
+                            <span class="visible-xs-inline"><i class="fa fa-search fa-fw"></i></span>
+                          </a>
+                            <ul class="dropdown-menu" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                              <!-- User image -->
+                              <li class="user-footer">
+                                {!! Form::open(['route' => 'dashboard.search', 'method' => 'GET']) !!}
+                                <div class="input-group">
+                                    {!! Form::text('search_pnr ', null, array('class' => 'form-control', 'placeholder' => 'Search PNR...', 'id' => 'search_pnr', 'required')) !!}
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+                                    </span>
+                                </div>
+                                {!! Form::close() !!}
+                              </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown user user-menu">
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                             @if(Auth::user()->image != null || Auth::user()->image != '')
                             <img src="{{ asset('images/users/'.Auth::user()->image) }}" class="user-image" alt="User Image">
                             @else
@@ -123,7 +142,7 @@
                                   @endif
                                 </div>
                               </li>
-                            </ul>                            
+                            </ul>
                         </li>
                     </ul>
                 </div>

@@ -10,14 +10,8 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-Route::get('/clear', function() {
-    Artisan::call('cache:clear');
-    Artisan::call('optimize');
-    Artisan::call('config:cache');
-    Artisan::call('key:generate');
-    echo 'All done!';
-    // return what you want
-});
+Route::get('/clear', ['as'=>'clear','uses'=>'ReservationController@clear']);
+
 Route::get('/', ['as' => 'dashboard.index', 'uses' => 'DashboardController@index']);
 Route::get('/dashboard', ['as' => 'dashboard.index', 'uses' => 'DashboardController@index']);
 
@@ -37,8 +31,18 @@ Route::delete('/reservation/vacant/{id}', ['as' => 'reservation.destroy', 'uses'
 
 // reservations api...
 Route::get('/reservation/yesterday/getdata/{unique_key}/{date}', ['as' => 'reservation.getdata.api', 'uses' => 'ReservationController@getYesterdayDataAPI']);
+Route::get('/reservation/yesterday/filldata/{unique_key}/', ['as' => 'reservation.filldata.api', 'uses' => 'ReservationController@fillYesterdayDataAPI']);
 // reservations api...
 // reservations...
+
+// Invoice Generation
+Route::get('/dashboard/invoice', ['as' => 'dashboard.invoice', 'uses' => 'DashboardController@getInvoicePage']);
+Route::get('/dashboard/invoice/generation/pdf', ['as' => 'dashboard.generateinvoice', 'uses' => 'DashboardController@generateInvoice']);
+// Invoice Generation
+
+// Invoice Generation
+Route::get('/search/', ['as' => 'dashboard.search', 'uses' => 'DashboardController@searchPNR']);
+// Invoice Generation
 
 // monthly statement
 Route::get('/dashboard/statement', ['as' => 'dashboard.statement', 'uses' => 'DashboardController@getStement']);

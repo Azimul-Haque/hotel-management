@@ -11,7 +11,11 @@
 @section('body')
     <div class="login-box">
         <div class="login-logo">
-            <a href="{{ url(config('adminlte.dashboard_url', 'home')) }}">{!! config('adminlte.logo', '<b>Gung</b>chil') !!}</a>
+
+            <a href="{{ url(config('adminlte.dashboard_url', 'home')) }}">
+                <img src="{{ asset('images/logo.png') }}">
+                {!! config('adminlte.logo', '<b>Megh</b>Kabbo') !!}
+            </a>
         </div>
         <!-- /.login-logo -->
         <div class="login-box-body">

@@ -15,7 +15,9 @@ class CreateReservationsTable extends Migration
         Schema::create('reservations', function (Blueprint $table) {
             $table->increments('id');
             $table->string('unique_key')->unique();
+            $table->string('pnr')->unique();
             $table->datetime('date');
+            $table->datetime('timelimit');
             $table->string('room_name');
             $table->string('reservation_status');
             $table->string('name');
@@ -25,6 +27,7 @@ class CreateReservationsTable extends Migration
             $table->string('discount');
             $table->string('advance');
             $table->string('due');
+            $table->string('booked_by');
             $table->timestamps();
         });
     }

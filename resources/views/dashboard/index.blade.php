@@ -5,6 +5,7 @@
 @section('css')
   <link rel="stylesheet" type="text/css" href="{{ asset('css/dashboard.css') }}">
   <script src="{{ asset('vendor/adminlte/vendor/jquery/dist/jquery.min.js') }}"></script>
+  {!!Html::style('https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css')!!}
 @stop
 
 @section('content_header')
@@ -60,7 +61,7 @@
         @if(date('F d, Y', strtotime(Carbon::today()->addDays($j))) == date('F d, Y'))
             <center><b style="letter-spacing: 2px; margin: 0px 25px 0px 25px;">Today</b></center>
           @else
-            {{ date('F d, Y', strtotime(Carbon::today()->addDays($j))) }}
+            {{ date('D, M d, Y', strtotime(Carbon::today()->addDays($j))) }}
           @endif
       </td>
       @endfor
@@ -159,7 +160,7 @@
 
 {{-- add Modal --}}
 <div class="modal fade" id="addFormModal" role="dialog">
-  <div class="modal-dialog modal-md">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header modal-header-success">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -171,57 +172,82 @@
       </div>
       <div class="modal-body">
         <center><small style=""><u><b><span id="add_modal_blackout_day_occation"></span></b></u></small></center>
-        {!! Form::open(['route' => 'reservation.store', 'method' => 'POST']) !!}
+          {!! Form::open(['route' => 'reservation.store', 'method' => 'POST']) !!}
           {!! Form::hidden('post_type', 'new') !!}
           {!! Form::hidden('unique_key', null, ['id' => 'add_modal_hidden_unique_key']) !!}
           {!! Form::hidden('date', null, ['id' => 'add_modal_hidden_date']) !!}
           {!! Form::hidden('room_name', null, ['id' => 'add_modal_hidden_room_name']) !!}
-          <div class="form-group">
-            {!! Form::label('reservation_status', 'Reservation Status:') !!}
-            <select name="reservation_status" class="form-control" id="add_reservation_status_selected" required="">
-              <option value="" selected="" disabled="">Select Reservation Status</option>
-              <option value="Booked">Booked</option>
-              <option value="Paid">Paid</option>
-            </select> 
+
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                {!! Form::label('reservation_status', 'Reservation Status:') !!}
+                <select name="reservation_status" class="form-control" id="add_reservation_status_selected" required="">
+                  <option value="" selected="" disabled="">Select Reservation Status</option>
+                  <option value="Booked">Booked</option>
+                  <option value="Paid">Paid</option>
+                </select> 
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group" id="hideaddtimelimit">
+                {!! Form::label('timelimit  ', 'Timelimit :') !!}
+                {!! Form::text('timelimit ', null, array('class' => 'form-control', 'placeholder' => 'Timelimit', 'id' => 'add_timelimit', 'min' => '0', 'step' => 'any', 'autocomplete' => 'off')) !!}
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                {!! Form::label('booked_by', 'Booked by:') !!}
+                {!! Form::text('booked_by', null, array('class' => 'form-control', 'placeholder' => 'Booked by', 'required' => '', 'id' => 'add_booked_by', 'min' => '0', 'step' => 'any')) !!}
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            {!! Form::label('name', 'Guest Name:') !!}
-            {{-- if available and previous data exists --}}
-            <button type="button" class="btn btn-success btn-xs" id="copy_data_yesterday" style="display: none;"><i class="fa fa-fw fa-clone" aria-hidden="true"></i>Copy guest data from Yesterday</button>
-            {{-- if available and previous data exists --}}
-            {!! Form::text('name', null, array('class' => 'form-control', 'placeholder' => 'Guest Name', 'required' => '', 'id' => 'add_name')) !!}
-          </div>
-          <div class="form-group">
-            {!! Form::label('email', 'Email Address:') !!}
-            {!! Form::text('email', null, array('class' => 'form-control', 'placeholder' => 'Email Address', 'required' => '', 'id' => 'add_email')) !!}
-          </div>
-          <div class="form-group">
-            {!! Form::label('phone', 'Contact Number:') !!}
-            {!! Form::text('phone', null, array('class' => 'form-control', 'placeholder' => 'Contact Number', 'required' => '', 'id' => 'add_phone')) !!}
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                {!! Form::label('name', 'Guest Name:') !!}
+                {{-- if available and previous data exists --}}
+                <select id="copy_data_yesterday">
+                  <option value="" selected="" disabled="">Loading...</option>
+                </select>
+                {{-- if available and previous data exists --}}
+                {!! Form::text('name', null, array('class' => 'form-control', 'placeholder' => 'Guest Name', 'required' => '', 'id' => 'add_name')) !!}
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                {!! Form::label('email', 'Email Address:') !!}
+                {!! Form::text('email', null, array('class' => 'form-control', 'placeholder' => 'Email Address', 'required' => '', 'id' => 'add_email')) !!}
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                {!! Form::label('phone', 'Contact Number:') !!}
+                {!! Form::text('phone', null, array('class' => 'form-control', 'placeholder' => 'Contact Number', 'required' => '', 'id' => 'add_phone')) !!}
+              </div>
+            </div>
           </div>
           <h4><i class="fa fa-handshake-o" aria-hidden="true"></i> <u>Financial Data</u></h4>
           <div class="row">
-            <div class="col-md-6 col-sm-6 col-xs-6">
+            <div class="col-md-3">
               <div class="form-group">
                 {!! Form::label('price', 'Room Price:') !!}
                 {!! Form::number('price', null, array('class' => 'form-control', 'placeholder' => 'Room Price', 'required' => '', 'id' => 'add_price', 'min' => '0', 'step' => 'any', 'autocomplete' => 'off')) !!}
               </div>
             </div>
-            <div class="col-md-6 col-sm-6 col-xs-6">
+            <div class="col-md-3">
               <div class="form-group">
                 {!! Form::label('discount', 'Discount:') !!}
                 {!! Form::number('discount', null, array('class' => 'form-control', 'placeholder' => 'Discount', 'required' => '', 'id' => 'add_discount', 'min' => '0', 'step' => 'any', 'autocomplete' => 'off')) !!}
               </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6 col-sm-6 col-xs-6">
+            <div class="col-md-3">
               <div class="form-group">
                 {!! Form::label('advance', 'Advance/ Paid:') !!}
                 {!! Form::number('advance', null, array('class' => 'form-control', 'placeholder' => 'Advance', 'required' => '', 'id' => 'add_advance', 'min' => '0', 'step' => 'any', 'autocomplete' => 'off')) !!}
               </div>
             </div>
-            <div class="col-md-6 col-sm-6 col-xs-6">
+            <div class="col-md-3">
               <div class="form-group">
                 {!! Form::label('due', 'Due:') !!}
                 {!! Form::number('due', null, array('class' => 'form-control', 'placeholder' => 'Due', 'required' => '', 'id' => 'add_due', 'min' => '0', 'step' => 'any', 'autocomplete' => 'off')) !!}
@@ -241,7 +267,7 @@
 
 {{-- edit Modal --}}
 <div class="modal fade" id="editFormModal" role="dialog">
-  <div class="modal-dialog modal-md">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header modal-header-success">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -258,53 +284,76 @@
         {!! Form::hidden('unique_key', null, ['id' => 'edit_modal_hidden_unique_key']) !!}
         {!! Form::hidden('date', null, ['id' => 'edit_modal_hidden_date']) !!}
         {!! Form::hidden('room_name', null, ['id' => 'edit_modal_hidden_room_name']) !!}
-        <div class="form-group">
-          {!! Form::label('reservation_status', 'Reservation Status:') !!}
-          <select name="reservation_status" class="form-control" id="edit_reservation_status_selected" required="">
-            <option value="" selected="" disabled="">Select Reservation Status</option>
-            <option value="Booked">Booked</option>
-            <option value="Paid">Paid</option>
-            <option value="Vacant" style="display: none;" id="edit_modal_hidden_vacant">Vacant</option>
-          </select> 
+        
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              {!! Form::label('reservation_status', 'Reservation Status:') !!}
+              <select name="reservation_status" class="form-control" id="edit_reservation_status_selected" required="">
+                <option value="" selected="" disabled="">Select Reservation Status</option>
+                <option value="Booked">Booked</option>
+                <option value="Paid">Paid</option>
+                <option value="Vacant" style="display: none;" id="edit_modal_hidden_vacant">Vacant</option>
+              </select> 
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group" id="hideedittimelimit">
+              {!! Form::label('timelimit  ', 'Timelimit :') !!}
+              {!! Form::text('timelimit ', null, array('class' => 'form-control', 'placeholder' => 'Timelimit', 'id' => 'edit_timelimit', 'min' => '0', 'step' => 'any', 'autocomplete' => 'off')) !!}
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              {!! Form::label('booked_by', 'Booked by:') !!}
+              {!! Form::text('booked_by', null, array('class' => 'form-control', 'placeholder' => 'Booked by', 'required' => '', 'id' => 'edit_booked_by', 'min' => '0', 'step' => 'any')) !!}
+            </div>
+          </div>
         </div>
-        <div class="form-group">
-          {!! Form::label('name', 'Guest Name:') !!} 
-          {!! Form::text('name', null, array('class' => 'form-control', 'placeholder' => 'Guest Name', 'required' => '', 'id' => 'edit_name')) !!}
-        </div>
-        <div class="form-group">
-          {!! Form::label('email', 'Email Address:') !!}
-          {!! Form::text('email', null, array('class' => 'form-control', 'placeholder' => 'Email Address', 'required' => '', 'id' => 'edit_email')) !!}
-        </div>
-        <div class="form-group">
-          {!! Form::label('phone', 'Contact Number:') !!}
-          {!! Form::text('phone', null, array('class' => 'form-control', 'placeholder' => 'Contact Number', 'required' => '', 'id' => 'edit_phone')) !!}
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              {!! Form::label('name', 'Guest Name:') !!} 
+              {!! Form::text('name', null, array('class' => 'form-control', 'placeholder' => 'Guest Name', 'required' => '', 'id' => 'edit_name')) !!}
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              {!! Form::label('email', 'Email Address:') !!}
+              {!! Form::text('email', null, array('class' => 'form-control', 'placeholder' => 'Email Address', 'required' => '', 'id' => 'edit_email')) !!}
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              {!! Form::label('phone', 'Contact Number:') !!}
+              {!! Form::text('phone', null, array('class' => 'form-control', 'placeholder' => 'Contact Number', 'required' => '', 'id' => 'edit_phone')) !!}
+            </div>
+          </div>
         </div>
         <h4><i class="fa fa-handshake-o" aria-hidden="true"></i> <u>Financial Data</u></h4>
         <div class="row">
-          <div class="col-md-6 col-sm-6 col-xs-6">
+          <div class="col-md-3">
             <div class="form-group">
               {!! Form::label('price', 'Room Price:') !!}
               {!! Form::number('price', null, array('class' => 'form-control', 'placeholder' => 'Room Price', 'required' => '', 'id' => 'edit_price', 'min' => '0', 'step' => 'any', 'autocomplete' => 'off')) !!}
             </div>
           </div>
-          <div class="col-md-6 col-sm-6 col-xs-6">
+          <div class="col-md-3">
             <div class="form-group">
               {!! Form::label('discount', 'Discount:') !!}
               {!! Form::number('discount', null, array('class' => 'form-control', 'placeholder' => 'Discount', 'required' => '', 'id' => 'edit_discount', 'min' => '0', 'step' => 'any', 'autocomplete' => 'off')) !!}
             </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6 col-sm-6 col-xs-6">
+          <div class="col-md-3">
             <div class="form-group">
               {!! Form::label('advance', 'Advance/ Paid:') !!}
               {!! Form::number('advance', null, array('class' => 'form-control', 'placeholder' => 'Advance', 'required' => '', 'id' => 'edit_advance', 'min' => '0', 'step' => 'any', 'autocomplete' => 'off')) !!}
             </div>
           </div>
-          <div class="col-md-6 col-sm-6 col-xs-6">
+          <div class="col-md-3">
             <div class="form-group">
               {!! Form::label('due', 'Due:') !!}
-              {!! Form::number('due', null, array('class' => 'form-control', 'placeholder' => 'Due', 'required' => '', 'id' => 'edit_due', 'min' => '0', 'step' => 'any', 'autocomplete' => 'off')) !!}
+              {!! Form::text('due', null, array('class' => 'form-control', 'placeholder' => 'Due', 'required' => '', 'id' => 'edit_due', 'min' => '0', 'step' => 'any', 'autocomplete' => 'off')) !!}
             </div>
           </div>
         </div>
@@ -322,10 +371,20 @@
 @stop
 
 @section('js')
+  <script type="text/javascript" src="{{ asset('js/moment.js') }}"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
   <script type="text/javascript">
     function showaddFormModal(unique_key, room_name, date, blackout_day_occation, reservation_data, hidden_date, availability) {
       $(':input').not(':input[type="hidden"], :checkbox, :submit').val('');
+      $('#copy_data_yesterday')
+            .find('option')
+            .remove()
+            .end()
+            .prop('disabled', false)
+            .append('<option value="" selected disabled>Guest from yeaterday</option>');
       $('#copy_data_yesterday').css('display', 'none');
+      $('#hideaddtimelimit').css('display', 'none');
+      $('#hideedittimelimit').css('display', 'none');
       if(reservation_data == '') {
         $('#add_modal_room_name').text(room_name);
         $('#add_modal_today_date_with_format').text(date);
@@ -336,9 +395,14 @@
         $('#add_modal_hidden_room_name').val(room_name);
         if(availability == 'Available') {
           $.get(window.location.protocol + "//" + window.location.host + "/reservation/yesterday/getdata/" + unique_key + "/" + hidden_date, function(data, status){
-              if(data != 'N/A') {
+              if(data != 'N/A' && data != '' && data != '[]') {
                 $('#copy_data_yesterday').css('display', '');
-                $('#copy_data_yesterday').attr('onclick', 'fillDataYesterday("' + unique_key + '","'+ hidden_date +'")');
+                for(var sizeofguest = 0; sizeofguest < data.length; sizeofguest++) {
+                  $('#copy_data_yesterday').append('<option value="'+data[sizeofguest].unique_key+'">'+data[sizeofguest].name+'</option>');
+                  $('#copy_data_yesterday').attr('onchange', 'fillDataYesterday()');
+                }
+              } else {
+                $('#copy_data_yesterday').css('display', 'none');
               }
           });
         }
@@ -359,6 +423,11 @@
           $('#edit_modal_hidden_vacant').css('display', 'block');
           $('#edit_modal_hidden_vacant').css('background', '#ef9a9a');
           $('#edit_modal_hidden_vacant').css('color', '#000');
+          $('#hideedittimelimit').css('display', '');
+          $('#edit_timelimit').datetimepicker({
+            format: 'MMMM DD, YYYY hh:mm A',
+            date: reservation_data.timelimit
+          });
         }
         $('#edit_name').val(reservation_data.name);
         $('#edit_email').val(reservation_data.email);
@@ -373,8 +442,10 @@
       }
     }
 
-    function fillDataYesterday(unique_key, hidden_date) {
-      $.get(window.location.protocol + "//" + window.location.host + "/reservation/yesterday/getdata/" + unique_key + "/" + hidden_date, function(data, status){
+    function fillDataYesterday() {
+      //console.log($('#copy_data_yesterday').val());
+      unique_key_to_fill = $('#copy_data_yesterday').val();
+      $.get(window.location.protocol + "//" + window.location.host + "/reservation/yesterday/filldata/" + unique_key_to_fill, function(data, status){
           if(data != 'N/A') {
             $('#add_name').val(data.name);
             $('#add_email').val(data.email);
@@ -405,6 +476,25 @@
           $('#add_discount').val(0);
           $('#add_advance').val(0);
           $('#add_due').val(0);
+          $('#hideaddtimelimit').css('display', '');
+          $('#add_timelimit').datetimepicker({
+            format: 'MMMM DD, YYYY hh:mm A'
+          });
+        } else {
+          $('#hideaddtimelimit').css('display', 'none');
+          $('#hideedittimelimit').css('display', 'none');
+          $('#add_timelimit').val('');
+        }
+      });
+      $("#edit_reservation_status_selected").change(function(){
+        if($(this).val() == 'Booked') {
+          $('#hideedittimelimit').css('display', '');
+          $('#edit_timelimit').datetimepicker({
+            format: 'MMMM DD, YYYY hh:mm A'
+          });
+        } else {
+          $('#hideedittimelimit').css('display', 'none');
+          $('#edit_timelimit').val() = '';
         }
       });
       $("#add_price").keyup(function(){
@@ -467,6 +557,11 @@
         $('#edit_modal_room_name').text('{{ old('room_name') }}');
         $('#edit_modal_today_date_with_format').text('{{ date('F d, Y', strtotime(old('date'))) }}');
     });
+  </script>
+  <script type="text/javascript">
+    $(document).ready(function(){
+        
+    })
   </script>
   @endif
 @stop

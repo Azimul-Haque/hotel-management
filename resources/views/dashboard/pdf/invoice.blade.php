@@ -46,7 +46,7 @@
       </td>
       <td  width="60%"></td>
       <td  width="20%">
-        PNR: FIT/09/11/01
+        PNR: {{ $invoicedata->pnr }}
       </td>
     </tr>
   </table>

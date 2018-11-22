@@ -19,37 +19,37 @@
       <th>Date</th>
     </tr>
     <tr>
-      <th style="background: #d1c4e9;">G1 (Group)</th>
+      <th style="background: #d1c4e9;" data-placement="right" title="101 Super Twin Double Bed">101 Super Twin D. Bed</th>
     </tr>
     <tr>
-      <th style="background: #d1c4e9;">G2 (Group)</th>
+      <th style="background: #d1c4e9;" data-placement="right" title="102 Seper Group Bed">102 Super Group Bed</th>
     </tr>
     <tr>
-      <th style="background: #f0f4c3;">101 (Family)</th>
+      <th style="background: #f0f4c3;" data-placement="right" title="201 Deluxe Family Bed">201 Deluxe Family Bed</th>
     </tr>
     <tr>
-      <th style="background: #00e676;">102 (Couple)</th>
+      <th style="background: #00e676;" data-placement="right" title="202 Deluxe Couple Bed">202 Deluxe Couple Bed</th>
     </tr>
     <tr>
-      <th style="background: #00e676;">103 (Couple)</th>
+      <th style="background: #00e676;" data-placement="right" title="203 Deluxe Couple Bed">203 Deluxe Couple Bed</th>
     </tr>
     <tr>
-      <th style="background: #00e676;">201 (Couple)</th>
+      <th style="background: #00e676;" data-placement="right" title="301 Deluxe Couple Bed">301 Deluxe Couple Bed</th>
     </tr>
     <tr>
-      <th style="background: #00e676;">202 (Couple)</th>
+      <th style="background: #00e676;" data-placement="right" title="302 Deluxe Couple Bed">302 Deluxe Couple Bed</th>
     </tr>
     <tr>
-      <th style="background: #00e676;">203 (Couple)</th>
+      <th style="background: #00e676;" data-placement="right" title="303 Deluxe Couple Bed">303 Deluxe Couple Bed</th>
     </tr>
     <tr>
-      <th style="background: #ccff90;">301 (E. Double)</th>
+      <th style="background: #ccff90;" data-placement="right" title="401 Executive Twin Double Bed">401 E. Twin Double Bed</th>
     </tr>
     <tr>
-      <th style="background: #795548; color: #fff;">302 (Double)</th>
+      <th style="background: #795548; color: #fff;" data-placement="right" title="402 Deluxe Twin Double Bed">402 Deluxe Twin D. Bed</th>
     </tr>
     <tr>
-      <th style="background: #795548; color: #fff;">303 (Triple)</th>
+      <th style="background: #795548; color: #fff;" data-placement="right" title="403 Deluxe Triple Bed">403 Deluxe T. Bed</th>
     </tr>
   </table>
 </div>
@@ -86,37 +86,37 @@
           $unique_key = '';
 
           if($i == 0) {
-              $room_name = 'G1 (Group)';
+              $room_name = '101 Super Twin Double Bed';
               $unique_key = $i.'_g1_'.date('d_m_Y', strtotime(Carbon::today()->addDays($j)));
           } elseif($i == 1) {
-              $room_name = 'G2 (Group)';
+              $room_name = '102 Super Group Bed';
               $unique_key = $i.'_g2_'.date('d_m_Y', strtotime(Carbon::today()->addDays($j)));
           } elseif($i == 2) {
-              $room_name = '101 (Family)';
+              $room_name = '201 Deluxe Family Bed';
               $unique_key = $i.'_101_'.date('d_m_Y', strtotime(Carbon::today()->addDays($j)));
           } elseif($i == 3) {
-              $room_name = '102 (Couple)';
+              $room_name = '202 Deluxe Couple Bed';
               $unique_key = $i.'_102_'.date('d_m_Y', strtotime(Carbon::today()->addDays($j)));
           } elseif($i == 4) {
-              $room_name = '103 (Couple)';
+              $room_name = '203 Deluxe Couple Bed';
               $unique_key = $i.'_103_'.date('d_m_Y', strtotime(Carbon::today()->addDays($j)));
           } elseif($i == 5) {
-              $room_name = '201 (Couple)';
+              $room_name = '301 Deluxe Couple Bed';
               $unique_key = $i.'_201_'.date('d_m_Y', strtotime(Carbon::today()->addDays($j)));
           } elseif($i == 6) {
-              $room_name = '202 (Couple)';
+              $room_name = '302 Deluxe Couple Bed';
               $unique_key = $i.'_202_'.date('d_m_Y', strtotime(Carbon::today()->addDays($j)));
           } elseif($i == 7) {
-              $room_name = '203 (Couple)';
+              $room_name = '303 Deluxe Couple Bed';
               $unique_key = $i.'_203_'.date('d_m_Y', strtotime(Carbon::today()->addDays($j)));
           } elseif($i == 8) {
-              $room_name = '301 (E. Double)';
+              $room_name = '401 Executive Twin Double Bed';
               $unique_key = $i.'_301_'.date('d_m_Y', strtotime(Carbon::today()->addDays($j)));
           } elseif($i == 9) {
-              $room_name = '302 (Double)';
+              $room_name = '402 Deluxe Twin Double Bed';
               $unique_key = $i.'_302_'.date('d_m_Y', strtotime(Carbon::today()->addDays($j)));
           } elseif($i == 10) {
-              $room_name = '303 (Triple)';
+              $room_name = '403 Deluxe Triple Bed';
               $unique_key = $i.'_303_'.date('d_m_Y', strtotime(Carbon::today()->addDays($j)));
           }
         @endphp
@@ -272,9 +272,9 @@
       <div class="modal-header modal-header-success">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">
-          <i class="fa fa-bed" aria-hidden="true"></i>
-          <span id="edit_modal_room_name"></span>, 
-          <i class="fa fa-calendar" aria-hidden="true"></i> <span id="edit_modal_today_date_with_format"></span>
+          <i class="fa fa-bed" aria-hidden="true"></i> <span id="edit_modal_room_name"></span>, 
+          <i class="fa fa-calendar" aria-hidden="true"></i> <span id="edit_modal_today_date_with_format"></span>, 
+          <i class="fa fa-tag" aria-hidden="true"></i> <span id="edit_modal_pnr"></span>
         </h4>
       </div>
       <div class="modal-body">
@@ -374,6 +374,14 @@
   <script type="text/javascript" src="{{ asset('js/moment.js') }}"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
   <script type="text/javascript">
+    $(function(){
+     $('a[title]').tooltip();
+     $('button[title]').tooltip();
+     $('th[title]').tooltip();
+     $('td[title]').tooltip();
+    });
+  </script>
+  <script type="text/javascript">
     function showaddFormModal(unique_key, room_name, date, blackout_day_occation, reservation_data, hidden_date, availability) {
       $(':input').not(':input[type="hidden"], :checkbox, :submit').val('');
       $('#copy_data_yesterday')
@@ -419,6 +427,7 @@
         $('#edit_modal_hidden_date').val(hidden_date);
         $('#edit_modal_hidden_room_name').val(room_name);
         $('#edit_reservation_status_selected').val(reservation_data.reservation_status);
+        $('#edit_modal_pnr').text(reservation_data.pnr);
         if($('#edit_reservation_status_selected').val() == 'Booked') {
           $('#edit_modal_hidden_vacant').css('display', 'block');
           $('#edit_modal_hidden_vacant').css('background', '#ef9a9a');
@@ -459,9 +468,9 @@
     $(document).ready(function(){
       let offset = $('.today').position().left;
       if(screen.width >= 768) {
-        offset = offset - 400;
+        offset = offset - 450;
       } else {
-        offset = offset - 150;
+        offset = offset - 200;
       }
       $('.table-fixed-right').animate({
           scrollLeft: offset

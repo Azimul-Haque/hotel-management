@@ -10,7 +10,7 @@
   padding: 7px 5px;
 }
 .table-fixed-left {
-  width: 110px;
+  width: 160px;
   float: left;
   position: relative;
   white-space: nowrap;
@@ -26,7 +26,7 @@
   color: #00897b ;
 }
 .table-fixed-right {
-  width: calc(100% - 110px);
+  width: calc(100% - 160px);
   right: 15px;
   overflow-x: scroll;
   border: 1px solid #00897b ;

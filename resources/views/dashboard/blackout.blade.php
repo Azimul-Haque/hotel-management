@@ -36,7 +36,7 @@
     </div>
     <div class="col-md-8">
       <div class="table-responsive">
-        <table class="table">
+        <table class="table" id="datatable-blackouts">
           <thead>
             <tr>
               <th>Occation</th>
@@ -157,5 +157,26 @@
     @php $flagModal = 0; @endphp
   @endif
 @endforeach
+<script type="text/javascript">
+  $(function () {
+    //$.fn.dataTable.moment('DD MMMM, YYYY hh:mm:ss tt');
+    $('#datatable-blackouts').DataTable({
+      'paging'      : true,
+      'pageLength'  : 8,
+      'lengthChange': true,
+      'searching'   : true,
+      'ordering'    : true,
+      'info'        : true,
+      'autoWidth'   : true,
+      'order': [[ 1, "desc" ]],
+       columnDefs: [
+              { targets: [2], visible: true, searchable: false},
+              { targets: '_all', visible: true, searchable: true },
+              { targets: [1], type: 'date'}
+       ]
+    });
+    $('#datatable-commodities_wrapper').removeClass( 'form-inline' );
+  })
+</script>
 
 @stop

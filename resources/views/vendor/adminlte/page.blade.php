@@ -1,10 +1,13 @@
 @extends('adminlte::master')
 
 @section('adminlte_css')
-    <link rel="stylesheet"
-          href="{{ asset('vendor/adminlte/dist/css/skins/skin-' . config('adminlte.skin', 'blue') . '.min.css')}} ">
+    <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/skins/skin-' . config('adminlte.skin', 'blue') . '.min.css')}} ">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     @stack('css')
     @yield('css')
+    <style type="text/css">
+      .ui-front { z-index: 99999999; }
+    </style>
 @stop
 
 @section('body_class', 'skin-' . config('adminlte.skin', 'blue') . ' sidebar-mini ' . (config('adminlte.layout') ? [
@@ -65,8 +68,8 @@
                               <!-- User image -->
                               <li class="user-footer">
                                 {!! Form::open(['route' => 'dashboard.search', 'method' => 'GET']) !!}
-                                <div class="input-group">
-                                    {!! Form::text('search_pnr ', null, array('class' => 'form-control', 'placeholder' => 'Search PNR...', 'id' => 'search_pnr', 'required')) !!}
+                                <div class="input-group search_container">
+                                    {!! Form::text('search_pnr', null, array('class' => 'form-control', 'placeholder' => 'PNR/ Guest Name/ Email/ Phone...', 'id' => 'search_pnr', 'required', 'style' => 'width: 100%;')) !!}
                                     <span class="input-group-btn">
                                         <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
                                     </span>
@@ -207,6 +210,23 @@
 
 @section('adminlte_js')
     <script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+      var availableTags = [];
+      $( function() {
+        $.get(window.location.protocol + "//" + window.location.host + "/search/api/" + Date.now(), 
+          function(data, status){
+            data.forEach(function(element) {
+              availableTags.push(element);
+            });
+            console.log(availableTags);
+        });
+
+        $( "#search_pnr" ).autocomplete({
+          source: availableTags
+        });
+      } );
+      </script>
     @stack('js')
     @yield('js')
 @stop

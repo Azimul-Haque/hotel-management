@@ -198,7 +198,6 @@ class DashboardController extends Controller
 
     public function generateInvoice(Request $request)
     {
-        
         $this->validate($request, array(
           'name' => 'required',
           'email' => 'required',
@@ -223,8 +222,33 @@ class DashboardController extends Controller
         
     }
 
-    public function searchPNR()
+    public function searchPNR(Request $request)
     {
-        
+        $this->validate($request, array(
+          'search_pnr' => 'required'
+        ));
+
+        $reservations = Reservation::where('pnr', 'like', '%' . $request->search_pnr . '%')
+                                  ->orWhere('name', 'like', '%' . $request->search_pnr . '%')
+                                  ->orWhere('email', 'like', '%' . $request->search_pnr . '%')
+                                  ->orWhere('phone', 'like', '%' . $request->search_pnr . '%')
+                                  ->orderBy('id', 'desc')
+                                  ->get();
+
+
+        Session::flash('success', $reservations->count().' result(s) found!');
+        return view('dashboard.searchresult')->withReservations($reservations);
+    }
+
+    public function searchAPI($unique_uri_parameter)
+    {
+        $reservations = Reservation::select('pnr', 'name','phone', 'email')->get();
+
+        $reservations_array = [];
+        foreach ($reservations as $reservation) {
+            array_push($reservations_array, $reservation->pnr, $reservation->name, $reservation->email, $reservation->phone);
+        }
+
+        return array_values(array_unique($reservations_array));
     }
 }

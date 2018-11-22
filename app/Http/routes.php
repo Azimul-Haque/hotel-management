@@ -41,7 +41,8 @@ Route::get('/dashboard/invoice/generation/pdf', ['as' => 'dashboard.generateinvo
 // Invoice Generation
 
 // Invoice Generation
-Route::get('/search/', ['as' => 'dashboard.search', 'uses' => 'DashboardController@searchPNR']);
+Route::get('/search', ['as' => 'dashboard.search', 'uses' => 'DashboardController@searchPNR']);
+Route::get('/search/api/{unique_uri_parameter}', ['as' => 'dashboard.search.api', 'uses' => 'DashboardController@searchAPI']);
 // Invoice Generation
 
 // monthly statement

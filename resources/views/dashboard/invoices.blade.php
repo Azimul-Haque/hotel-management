@@ -16,14 +16,14 @@
   <div class="row">
     <div class="col-md-7">
       <div class="table-responsive">
-        <table class="table">
+        <table class="table" id="datatable-reservations">
           <thead>
             <tr>
               <th></th>
               <th>Room Name</th>
               <th>Date Enjoyed</th>
               <th>Guest Name</th>
-              <th>Phone</th>
+              <th>PNR</th>
             </tr>
           </thead>
           <tbody>
@@ -33,7 +33,7 @@
               <td>{{ $reservation->room_name }}</td>
               <td>{{ date('D, M d, Y', strtotime($reservation->date)) }}</td>
               <td>{{ $reservation->name }}</td>
-              <td>{{ $reservation->phone }}</td>
+              <td><b>{{ $reservation->pnr }}</b></td>
             </tr>
             @endforeach
           </tbody>
@@ -54,6 +54,7 @@
                 <div class="form-group">
                   <strong>Guest Name:</strong>
                   {!! Form::text('name', null, array('class' => 'form-control text-green', 'required' => '', 'placeholder' => 'Guest Name', 'id' => 'name', 'autocomplete' => 'off')) !!}
+                  {!! Form::hidden('pnr', null, ['id' => 'pnr']) !!}
                   {!! Form::hidden('email', null, ['id' => 'email']) !!}
                   {!! Form::hidden('phone', null, ['id' => 'phone']) !!}
                   {!! Form::hidden('room_type', null, ['id' => 'room_type']) !!}
@@ -154,6 +155,7 @@
           console.log('{{ $reservation->name }}');
           if($('#name').val() == '') {
             $('#name').val('{{ $reservation->name }}');
+            $('#pnr').val('{{ $reservation->pnr }}');
             $('#email').val('{{ $reservation->email }}');
             $('#phone').val('{{ $reservation->phone }}');
             $('#booked_by').val('{{ $reservation->booked_by }}');
@@ -202,10 +204,17 @@
               return checkin_out.indexOf(item) == pos;
           })
           unique_checkin_out.sort();
-          $('#checkin').val(unique_checkin_out[0]);
-          var checkout_add_one = new Date(unique_checkin_out[unique_checkin_out.length-1]);
-          checkout_add_one.setDate(checkout_add_one.getDate() + 1); 
-          $('#checkout').val(dateFormat(checkout_add_one, 'yyyy-mm-dd HH:MM:ss'));
+
+          if (unique_checkin_out === undefined || unique_checkin_out.length == 0) {
+            $('#checkin').val('');
+            $('#checkout').val('');
+          } else {
+            $('#checkin').val(unique_checkin_out[0]);
+            var checkout_add_one = new Date(unique_checkin_out[unique_checkin_out.length-1]);
+            checkout_add_one.setDate(checkout_add_one.getDate() + 1); 
+            $('#checkout').val(dateFormat(checkout_add_one, 'yyyy-mm-dd HH:MM:ss'));
+          }
+          console.log(unique_checkin_out[0]);
           console.log(unique_checkin_out[unique_checkin_out.length-1]);
         }
       });
@@ -221,5 +230,24 @@
       return totalval;
     }
   });
+</script>
+<script type="text/javascript">
+  $(function () {
+    //$.fn.dataTable.moment('DD MMMM, YYYY hh:mm:ss tt');
+    $('#datatable-reservations').DataTable({
+      'paging'      : true,
+      'pageLength'  : 10,
+      'lengthChange': true,
+      'searching'   : true,
+      'ordering'    : true,
+      'info'        : true,
+      'autoWidth'   : true,
+      'order': [[ 2, "desc" ]],
+       columnDefs: [
+              { targets: [2], type: 'date'}
+       ]
+    });
+    $('#datatable-commodities_wrapper').removeClass( 'form-inline' );
+  })
 </script>
 @stop

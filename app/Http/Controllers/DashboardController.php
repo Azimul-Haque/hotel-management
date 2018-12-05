@@ -8,6 +8,7 @@ use Carbon;
 
 use App\Reservation;
 use App\Blackout;
+use App\Room;
 use Session;
 
 use Illuminate\Support\Facades\DB;
@@ -33,11 +34,16 @@ class DashboardController extends Controller
      */
     public function index()
     {   
+        $rooms = Room::all();
+        $rooms_array = [];
+        foreach ($rooms as $room) {
+            array_push($rooms_array, $room->name);
+        }
         $blackouts = Blackout::whereBetween('date', [Carbon::today()->addDays(-15), Carbon::today()->addDays(15)])->get();
         // delete the timeout bookings...
         $allreservations = Reservation::whereBetween('date', [Carbon::today()->addDays(-15), Carbon::today()->addDays(15)])->get();
         foreach ($allreservations as $reservation) {
-            if(($reservation->reservation_status == 'Booked') && ($reservation->timelimit < Carbon::now())) {
+            if(($reservation->reservation_status == 'Booked') && ($reservation->timelimit < Carbon::today()->addDays(-7))) {
                 $reservation->delete();
                 //dd($reservation->timelimit);
             }
@@ -46,7 +52,8 @@ class DashboardController extends Controller
         $reservations = Reservation::whereBetween('date', [Carbon::today()->addDays(-15), Carbon::today()->addDays(15)])->get();
         return view('dashboard.index')
                  ->withBlackouts($blackouts)
-                 ->withReservations($reservations);
+                 ->withReservations($reservations)
+                 ->withRooms($rooms_array);
     }
 
     public function getBlackouts()

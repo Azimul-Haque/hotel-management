@@ -163,7 +163,7 @@
 </div>
 
 {{-- add Modal --}}
-<div class="modal fade" id="addFormModal" role="dialog">
+<div class="modal fade" id="addFormModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header modal-header-success">
@@ -181,6 +181,7 @@
           {!! Form::hidden('unique_key', null, ['id' => 'add_modal_hidden_unique_key']) !!}
           {!! Form::hidden('date', null, ['id' => 'add_modal_hidden_date']) !!}
           {!! Form::hidden('room_name', null, ['id' => 'add_modal_hidden_room_name']) !!}
+          {!! Form::hidden('base_price', null, ['id' => 'add_modal_hidden_base_price']) !!}
 
           <div class="row">
             <div class="col-md-4">
@@ -231,18 +232,15 @@
               </div>
             </div>
           </div>
-          {{-- <div class="row">
+          <div class="row">
             <div class="col-md-12">
               <div class="form-group">
-                {!! Form::label('room_names', 'Contact Number:') !!}
-                <select name="room_names[]" class="form-control" id="room_names" multiple="multiple" data-placeholder="Select more than one room">
-                  <option value="" selected="" disabled="">Select Reservation Status</option>
-                  <option value="Booked">Booked</option>
-                  <option value="Paid">Paid</option>
+                {!! Form::label('room_names', 'Combined room (if applicable)') !!}<br/>
+                <select name="room_names[]" class="form-control" id="add_room_names" multiple="multiple" data-placeholder="Select rooms" style="width: 100%;">
                 </select> 
               </div>
             </div>
-          </div> --}}
+          </div>
           <h4><i class="fa fa-handshake-o" aria-hidden="true"></i> <u>Financial Data</u></h4>
           <div class="row">
             <div class="col-md-3">
@@ -259,8 +257,8 @@
                   <span class="input-group-btn" style="width:0px;"></span>
                   <select class="form-control" id="add_discount_tk_or_percentage" name="discount_tk_or_percentage">
                     <option value="" selected="" disabled="">Select</option>
-                    <option>Tk</option>
-                    <option>%</option>
+                    <option value="Tk">Tk</option>
+                    <option value="%">%</option>
                   </select>
                 </div>
               </div>
@@ -308,6 +306,7 @@
         {!! Form::hidden('unique_key', null, ['id' => 'edit_modal_hidden_unique_key']) !!}
         {!! Form::hidden('date', null, ['id' => 'edit_modal_hidden_date']) !!}
         {!! Form::hidden('room_name', null, ['id' => 'edit_modal_hidden_room_name']) !!}
+        {!! Form::hidden('base_price', null, ['id' => 'edit_modal_hidden_base_price']) !!}
         
         <div class="row">
           <div class="col-md-4">
@@ -324,7 +323,7 @@
           <div class="col-md-4">
             <div class="form-group" id="hideedittimelimit">
               {!! Form::label('timelimit  ', 'Timelimit :') !!}
-              {!! Form::text('timelimit ', null, array('class' => 'form-control', 'placeholder' => 'Timelimit', 'id' => 'edit_timelimit', 'autocomplete' => 'off')) !!}
+              {!! Form::text('timelimit', null, array('class' => 'form-control', 'placeholder' => 'Timelimit', 'id' => 'edit_timelimit', 'autocomplete' => 'off')) !!}
             </div>
           </div>
           <div class="col-md-4">
@@ -354,6 +353,15 @@
             </div>
           </div>
         </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              {!! Form::label('room_names', 'Combined room (if applicable)') !!}<br/>
+              <select name="room_names[]" class="form-control" id="edit_room_names" multiple="multiple" data-placeholder="Select rooms" style="width: 100%;">
+              </select> 
+            </div>
+          </div>
+        </div>
         <h4><i class="fa fa-handshake-o" aria-hidden="true"></i> <u>Financial Data</u></h4>
         <div class="row">
           <div class="col-md-3">
@@ -369,9 +377,9 @@
                 <input type="text" class="form-control" name="discount" id="edit_discount" placeholder="Discount" min="0" step="any" autocomplete="off">
                 <span class="input-group-btn" style="width:0px;"></span>
                 <select class="form-control" id="edit_discount_tk_or_percentage" name="discount_tk_or_percentage">
-                  <option value="" selected="" disabled="">Select</option>
-                  <option>Tk</option>
-                  <option>%</option>
+                  <option value="" selected="" disabled=""></option>
+                  <option value="Tk">Tk</option>
+                  <option value="%">%</option>
                 </select>
               </div>
             </div>
@@ -406,7 +414,6 @@
   <script type="text/javascript" src="{{ asset('js/moment.js') }}"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
   <script type="text/javascript">
-    $('#room_names').select2();
     $(function(){
      $('a[title]').tooltip();
      $('button[title]').tooltip();
@@ -426,6 +433,8 @@
       $('#copy_data_yesterday').css('display', 'none');
       $('#hideaddtimelimit').css('display', 'none');
       $('#hideedittimelimit').css('display', 'none');
+      var rooms = [];
+      var filtered_rooms = [];
       if(reservation_data == '') {
         $('#add_modal_room_name').text(room_name);
         $('#add_modal_today_date_with_format').text(date);
@@ -434,6 +443,7 @@
         $('#add_modal_hidden_unique_key').val(unique_key);
         $('#add_modal_hidden_date').val(hidden_date);
         $('#add_modal_hidden_room_name').val(room_name);
+        $('#add_discount_tk_or_percentage').val('Tk');
         if(availability == 'Available') {
           $.get(window.location.protocol + "//" + window.location.host + "/reservation/yesterday/getdata/" + unique_key + "/" + hidden_date, function(data, status){
               if(data != 'N/A' && data != '' && data != '[]') {
@@ -447,6 +457,46 @@
               }
           });
         }
+        
+        //empty current options
+        $('#add_room_names')
+              .find('option')
+              .remove()
+              .end();
+        // php rooms array to javascript rooms array
+        @php
+        $rooms_array = $rooms;
+        $js_rooms_array = json_encode($rooms_array);
+        echo "rooms = ". $js_rooms_array . ";\n";
+        @endphp
+        // remove current room and used rooms from array
+        $.get(window.location.protocol + "//" + window.location.host + "/reservation/today/used/" + date, function(data, status){
+            if(data != 'N/A' && data != '' && data != '[]') {
+              for(var room_number = 0; room_number < data.length; room_number++) {
+                var used_room_index = rooms.indexOf(data[room_number]);
+                if (used_room_index > -1) {
+                  rooms.splice(used_room_index, 1);
+                }
+              }
+            }
+            var index = rooms.indexOf(room_name);
+            if (index > -1) {
+              rooms.splice(index, 1);
+            }
+            // append options
+            $.each(rooms, function (i, item) {
+                $('#add_room_names').append($('<option>', { 
+                    value: rooms[i],
+                    text : rooms[i] 
+                }));
+            });
+        });
+        
+        $('#add_room_names').select2({
+          placeholder: "Select rooms",
+          tags: true
+        });
+
         $('#addFormModal').modal({backdrop: "static"});
 
       } else {
@@ -459,6 +509,7 @@
         $('#edit_modal_hidden_unique_key').val(unique_key);
         $('#edit_modal_hidden_date').val(hidden_date);
         $('#edit_modal_hidden_room_name').val(room_name);
+        $('#edit_discount_tk_or_percentage').val('Tk');
         $('#edit_reservation_status_selected').val(reservation_data.reservation_status);
         $('#edit_modal_pnr').text(reservation_data.pnr);
         if($('#edit_reservation_status_selected').val() == 'Booked') {
@@ -466,6 +517,7 @@
           $('#edit_modal_hidden_vacant').css('background', '#ef9a9a');
           $('#edit_modal_hidden_vacant').css('color', '#000');
           $('#hideedittimelimit').css('display', '');
+          $('#edit_timelimit').val(reservation_data.timelimit);
           $('#edit_timelimit').datetimepicker({
             format: 'MMMM DD, YYYY hh:mm A',
             date: reservation_data.timelimit
@@ -476,10 +528,50 @@
         $('#edit_email').val(reservation_data.email);
         $('#edit_phone').val(reservation_data.phone);
         $('#edit_price').val(reservation_data.price);
+        $('#edit_modal_hidden_base_price').val(reservation_data.price);
         $('#edit_discount').val(reservation_data.discount);
         $('#edit_discount_tk_or_percentage').val(reservation_data.discount_tk_or_percentage);
         $('#edit_advance').val(reservation_data.advance);
         $('#edit_due').val(reservation_data.due);
+
+        //empty current options
+        $('#edit_room_names')
+              .find('option')
+              .remove()
+              .end();
+        // php rooms array to javascript rooms array
+        @php
+        $rooms_array = $rooms;
+        $js_rooms_array = json_encode($rooms_array);
+        echo "rooms = ". $js_rooms_array . ";\n";
+        @endphp
+        // remove current room and used rooms from array
+        $.get(window.location.protocol + "//" + window.location.host + "/reservation/today/used/" + date, function(data, status){
+            if(data != 'N/A' && data != '' && data != '[]') {
+              for(var room_number = 0; room_number < data.length; room_number++) {
+                var used_room_index = rooms.indexOf(data[room_number]);
+                if (used_room_index > -1) {
+                  rooms.splice(used_room_index, 1);
+                }
+              }
+            }
+            var index = rooms.indexOf(room_name);
+            if (index > -1) {
+              rooms.splice(index, 1);
+            }
+            // append options
+            $.each(rooms, function (i, item) {
+                $('#edit_room_names').append($('<option>', { 
+                    value: rooms[i],
+                    text : rooms[i] 
+                }));
+            });
+        });
+        
+        $('#edit_room_names').select2({
+          placeholder: "Select rooms",
+          tags: true
+        });
         
         $('#editFormModal').modal({backdrop: "static"});
         // console.log(reservation_data);
@@ -520,8 +612,6 @@
           add_price = 4000;
         } else if($('#add_modal_room_name').text().substring(0, 3) == '102') {
           add_price = 6000;
-        } else if($('#add_modal_room_name').text().substring(0, 3) == '102') {
-          add_price = 4000;
         } else if($('#add_modal_room_name').text().substring(0, 3) == '201') {
           add_price = 3000;
         } else if($('#add_modal_room_name').text().substring(0, 3) == '202') {
@@ -542,6 +632,7 @@
           add_price = 3500;
         }
         $('#add_price').val(add_price);
+        $('#add_modal_hidden_base_price').val(add_price);
         $('#add_discount').val(0);
         $('#add_advance').val(0);
         $('#add_due').val(add_price);
@@ -556,6 +647,7 @@
           $('#add_timelimit').val('');
         }
       });
+
       $("#edit_reservation_status_selected").change(function(){
         if($(this).val() == 'Booked') {
           $('#hideedittimelimit').css('display', '');
@@ -665,6 +757,93 @@
           due = price - (discount + advance);
         } else if(edit_discount_tk_or_percentage == '%') {
           due = price - ((price * (discount / 100)) + advance);
+        } else {
+          due = 0;
+        }
+        $('#edit_due').val(due);
+      });
+
+      $("#add_room_names").change(function(){
+        discount = parseFloat($('#add_discount').val()) || 0;
+        advance = parseFloat($('#add_advance').val()) || 0;
+        var base_price = parseFloat($('#add_modal_hidden_base_price').val()) || 0;
+        var add_price = base_price;
+        for(var countrooms = 0; countrooms < $(this).val().length; countrooms++) {
+          console.log($(this).val()[countrooms]);
+          if($(this).val()[countrooms] == '101 Super Twin Double Bed') {
+            add_price = add_price + 4000;
+          } else if($(this).val()[countrooms] == '102 Super Group Bed') {
+            add_price = add_price + 6000;
+          } else if($(this).val()[countrooms] == '201 Deluxe Family Bed') {
+            add_price = add_price + 3000;
+          } else if($(this).val()[countrooms] == '202 Deluxe Couple Bed') {
+            add_price = add_price + 3000;
+          } else if($(this).val()[countrooms] == '203 Deluxe Couple Bed') {
+            add_price = add_price + 3000;
+          } else if($(this).val()[countrooms] == '301 Deluxe Couple Bed') {
+            add_price = add_price + 3000;
+          } else if($(this).val()[countrooms] == '302 Deluxe Couple Bed') {
+            add_price = add_price + 3000;
+          } else if($(this).val()[countrooms] == '303 Deluxe Couple Bed') {
+            add_price = add_price + 3000;
+          } else if($(this).val()[countrooms] == '401 Executive Twin Double Bed') {
+            add_price = add_price + 5000;
+          } else if($(this).val()[countrooms] == '402 Deluxe Twin Double Bed') {
+            add_price = add_price + 4000;
+          } else if($(this).val()[countrooms] == '403 Deluxe Triple Bed') {
+            add_price = add_price + 3500;
+          }
+        }
+        $('#add_price').val(add_price);
+
+        add_discount_tk_or_percentage = $("#add_discount_tk_or_percentage").val();
+        if(add_discount_tk_or_percentage == 'Tk') {
+          due = add_price - (discount + advance);
+        } else if(add_discount_tk_or_percentage == '%') {
+          due = add_price - ((add_price * (discount / 100)) + advance);
+        } else {
+          due = 0;
+        }
+        $('#add_due').val(due);
+      });
+      $("#edit_room_names").change(function(){
+        discount = parseFloat($('#edit_discount').val()) || 0;
+        advance = parseFloat($('#edit_advance').val()) || 0;
+        var base_price = parseFloat($('#edit_modal_hidden_base_price').val()) || 0;
+        var edit_price = base_price;
+        for(var countrooms = 0; countrooms < $(this).val().length; countrooms++) {
+          console.log($(this).val()[countrooms]);
+          if($(this).val()[countrooms] == '101 Super Twin Double Bed') {
+            edit_price = edit_price + 4000;
+          } else if($(this).val()[countrooms] == '102 Super Group Bed') {
+            edit_price = edit_price + 6000;
+          } else if($(this).val()[countrooms] == '201 Deluxe Family Bed') {
+            edit_price = edit_price + 3000;
+          } else if($(this).val()[countrooms] == '202 Deluxe Couple Bed') {
+            edit_price = edit_price + 3000;
+          } else if($(this).val()[countrooms] == '203 Deluxe Couple Bed') {
+            edit_price = edit_price + 3000;
+          } else if($(this).val()[countrooms] == '301 Deluxe Couple Bed') {
+            edit_price = edit_price + 3000;
+          } else if($(this).val()[countrooms] == '302 Deluxe Couple Bed') {
+            edit_price = edit_price + 3000;
+          } else if($(this).val()[countrooms] == '303 Deluxe Couple Bed') {
+            edit_price = edit_price + 3000;
+          } else if($(this).val()[countrooms] == '401 Executive Twin Double Bed') {
+            edit_price = edit_price + 5000;
+          } else if($(this).val()[countrooms] == '402 Deluxe Twin Double Bed') {
+            edit_price = edit_price + 4000;
+          } else if($(this).val()[countrooms] == '403 Deluxe Triple Bed') {
+            edit_price = edit_price + 3500;
+          }
+        }
+        $('#edit_price').val(edit_price);
+
+        edit_discount_tk_or_percentage = $("#edit_discount_tk_or_percentage").val();
+        if(edit_discount_tk_or_percentage == 'Tk') {
+          due = edit_price - (discount + advance);
+        } else if(edit_discount_tk_or_percentage == '%') {
+          due = edit_price - ((edit_price * (discount / 100)) + advance);
         } else {
           due = 0;
         }

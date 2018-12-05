@@ -31,7 +31,8 @@ Route::delete('/reservation/vacant/{id}', ['as' => 'reservation.destroy', 'uses'
 
 // reservations api...
 Route::get('/reservation/yesterday/getdata/{unique_key}/{date}', ['as' => 'reservation.getdata.api', 'uses' => 'ReservationController@getYesterdayDataAPI']);
-Route::get('/reservation/yesterday/filldata/{unique_key}/', ['as' => 'reservation.filldata.api', 'uses' => 'ReservationController@fillYesterdayDataAPI']);
+Route::get('/reservation/yesterday/filldata/{unique_key}', ['as' => 'reservation.filldata.api', 'uses' => 'ReservationController@fillYesterdayDataAPI']);
+Route::get('/reservation/today/used/{date}', ['as' => 'reservation.todayused.api', 'uses' => 'ReservationController@getTodaysUsedRoomsAPI']);
 // reservations api...
 // reservations...
 

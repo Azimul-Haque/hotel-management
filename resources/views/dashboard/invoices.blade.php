@@ -60,6 +60,7 @@
                   {!! Form::hidden('room_type', null, ['id' => 'room_type']) !!}
                   {!! Form::hidden('checkin', null, ['id' => 'checkin']) !!}
                   {!! Form::hidden('checkout', null, ['id' => 'checkout']) !!}
+                  {!! Form::hidden('discount_tk_or_percentage', null, ['id' => 'discount_tk_or_percentage_hidden']) !!}
 
                 </div>
               </div>
@@ -80,7 +81,10 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <strong>Discount:</strong>
-                  {!! Form::text('discount', null, array('class' => 'form-control text-green', 'required' => '', 'placeholder' => 'Discount', 'id' => 'discount', 'autocomplete' => 'off')) !!}
+                  <div class="input-group">
+                    {!! Form::text('discount', null, array('class' => 'form-control text-green', 'required' => '', 'placeholder' => 'Discount', 'id' => 'discount', 'autocomplete' => 'off')) !!}
+                    <span class="input-group-addon" id="discount_tk_or_percentage"></span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -159,6 +163,8 @@
             $('#email').val('{{ $reservation->email }}');
             $('#phone').val('{{ $reservation->phone }}');
             $('#booked_by').val('{{ $reservation->booked_by }}');
+            $('#discount_tk_or_percentage').text('{{ $reservation->discount_tk_or_percentage }}');
+            $('#discount_tk_or_percentage_hidden').val('{{ $reservation->discount_tk_or_percentage }}');
           } // checkin checkout room_type
 
           room_type.push('{{ $reservation->room_name }}');

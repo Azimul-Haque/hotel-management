@@ -34,6 +34,15 @@ class DashboardController extends Controller
     public function index()
     {   
         $blackouts = Blackout::whereBetween('date', [Carbon::today()->addDays(-15), Carbon::today()->addDays(15)])->get();
+        // delete the timeout bookings...
+        $allreservations = Reservation::whereBetween('date', [Carbon::today()->addDays(-15), Carbon::today()->addDays(15)])->get();
+        foreach ($allreservations as $reservation) {
+            if(($reservation->reservation_status == 'Booked') && ($reservation->timelimit < Carbon::now())) {
+                $reservation->delete();
+                //dd($reservation->timelimit);
+            }
+        }
+
         $reservations = Reservation::whereBetween('date', [Carbon::today()->addDays(-15), Carbon::today()->addDays(15)])->get();
         return view('dashboard.index')
                  ->withBlackouts($blackouts)
@@ -208,6 +217,7 @@ class DashboardController extends Controller
           'booked_by' => 'required',
           'price' => 'required',
           'discount' => 'required',
+          'discount_tk_or_percentage' => 'required',
           'advance' => 'required',
           'due' => 'required',
           'payment_method' => 'required',

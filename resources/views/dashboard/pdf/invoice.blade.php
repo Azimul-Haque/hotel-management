@@ -84,7 +84,14 @@
     </tr>
     <tr>
       <td width="25%">Discount:</td>
-      <td colspan="3">{{ $invoicedata->discount }}/-</td>
+      <td colspan="3">
+        {{ $invoicedata->discount }}
+        @if($invoicedata->discount_tk_or_percentage == 'Tk')
+        /-
+        @elseif($invoicedata->discount_tk_or_percentage == '%')
+        %
+        @endif
+      </td>
     </tr>
     <tr>
       <td width="25%">Advance:</td>
@@ -126,7 +133,7 @@
         Head of Operation
       </td>
     </tr>
-  </table><br/><br/><br/>
+  </table><br/><br/><br/><br/><br/><br/><br/>
   <p><b><i>* A concern of <b>Gungchil Group</i></b></p>
 
   <htmlpagefooter name="page-footer">

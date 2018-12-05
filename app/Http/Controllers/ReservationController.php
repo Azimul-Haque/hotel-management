@@ -38,11 +38,12 @@ class ReservationController extends Controller
             'phone'=>'required|max:255',
             'price'=>'required|numeric',
             'discount'=>'required|numeric',
+            'discount_tk_or_percentage'=>'required',
             'advance'=>'required|numeric',
             'due'=>'required|numeric',
             'booked_by'=>'sometimes'
         ));
-
+        
         //store to DB
         $reservation = new Reservation;
         $reservation->unique_key = $request->unique_key;
@@ -67,6 +68,7 @@ class ReservationController extends Controller
         $reservation->phone = $request->phone;
         $reservation->price = $request->price;
         $reservation->discount = $request->discount;
+        $reservation->discount_tk_or_percentage = $request->discount_tk_or_percentage;
         $reservation->advance = $request->advance;
         $reservation->due = $request->due;
         $reservation->booked_by = $request->booked_by;
@@ -91,6 +93,7 @@ class ReservationController extends Controller
             'phone'=>'required|max:255',
             'price'=>'required|numeric',
             'discount'=>'required|numeric',
+            'discount_tk_or_percentage'=>'required',
             'advance'=>'required|numeric',
             'due'=>'required|numeric',
             'booked_by'=>'sometimes'
@@ -113,6 +116,7 @@ class ReservationController extends Controller
         $reservation->phone = $request->phone;
         $reservation->price = $request->price;
         $reservation->discount = $request->discount;
+        $reservation->discount_tk_or_percentage = $request->discount_tk_or_percentage;
         $reservation->advance = $request->advance;
         $reservation->due = $request->due;
         $reservation->booked_by = $request->booked_by;

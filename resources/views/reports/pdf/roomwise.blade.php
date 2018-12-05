@@ -23,7 +23,9 @@
   </style>
 </head>
 <body>
-  <h2 align="center">গাঙচিল লিমিটেড</h2>
+  <p align="center">
+    <img src="{{ public_path('images/logo.png') }}" width="200">
+  </p>
   <p align="center">ব্যালেন্স স্টেটমেন্ট</p>
   <p align="center"><b><u>Room: {{ $data[0] }} | Month: {{ $data[1] }}</u></b></p>
   <div class="">

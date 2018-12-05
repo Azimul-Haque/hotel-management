@@ -25,6 +25,7 @@ class CreateReservationsTable extends Migration
             $table->string('phone');
             $table->string('price');
             $table->string('discount');
+            $table->string('discount_tk_or_percentage');
             $table->string('advance');
             $table->string('due');
             $table->string('booked_by');

@@ -16,7 +16,7 @@
 <div class="table-fixed-left">
   <table class="table-fixed-left-side">
     <tr>
-      <th>Date</th>
+      <th>Room <i class="fa fa-arrow-down" aria-hidden="true"></i>  | Date <i class="fa fa-arrow-right" aria-hidden="true"></i></th>
     </tr>
     <tr>
       <th style="background: #d1c4e9;" data-placement="right" title="101 Super Twin Double Bed">101 Super Twin D. Bed</th>
@@ -57,11 +57,11 @@
   <table class="table-fixed-right-side">
     <tr>
       @for($j=-15; $j<16;$j++)
-      <td>
+      <td style="font-size: 16px !important;">
         @if(date('F d, Y', strtotime(Carbon::today()->addDays($j))) == date('F d, Y'))
             <center><b style="letter-spacing: 2px; margin: 0px 25px 0px 25px;">Today</b></center>
           @else
-            {{ date('D, M d, Y', strtotime(Carbon::today()->addDays($j))) }}
+            <b>{{ date('D, M d, Y', strtotime(Carbon::today()->addDays($j))) }}</b>
           @endif
       </td>
       @endfor
@@ -72,7 +72,7 @@
         @php 
           $availability = 'Available';
           if((date('l', strtotime(Carbon::today()->addDays($j))) == 'Friday') || date('l', strtotime(Carbon::today()->addDays($j))) == 'Saturday') {
-            $css = 'background: #e6e6e6;';
+            $css = 'background: #c8e6c9;';
           } else {
             $css = '';
           }
@@ -123,7 +123,7 @@
         @foreach($blackouts as $blackout)
           @php 
           if($blackout->date == Carbon::today()->addDays($j)) {
-            $css = 'background: #FFC2C8; color: #004d40;';
+            $css = 'background: #ffab91; color: #004d40;';
             $blackout_day_occation = '* Blackout Day Occation: '.$blackout->occasion;
           }
           @endphp
@@ -132,7 +132,7 @@
         @foreach($reservations as $reservation)
         @if($reservation->unique_key == $unique_key)
           @php 
-            if($reservation->reservation_status == 'Booked') {
+            if(($reservation->reservation_status == 'Booked') && ((new Carbon($reservation->date)) >= Carbon::today())) {
               $css = 'background: #ffeb3b; color: #000;';
               $availability = '<i class="fa fa-fw fa-calendar-check-o" aria-hidden="true"></i> Booked';
             } elseif ($reservation->reservation_status == 'Paid') {
@@ -140,7 +140,7 @@
                 $css = 'background: #2196f3; color: #fff;';
                 $availability = '<i class="fa fa-fw fa-check-square-o" aria-hidden="true"></i> Enjoyed';
               } else {
-                $css = 'background: #4caf50; color: #fff;';
+                $css = 'background: #558b2f; color: #fff;';
                 $availability = '<i class="fa fa-fw fa-thumbs-o-up" aria-hidden="true"></i> Paid';
               }
             }
@@ -150,7 +150,11 @@
         @endif
         @endforeach
         <td style="{{ $css }}" @if($availability != 'N/A') onclick="showaddFormModal('{{ $unique_key }}', '{{ $room_name }}', '{{ date('F d, Y', strtotime(Carbon::today()->addDays($j))) }}', '{{ $blackout_day_occation }}', '{{ $reservation_data }}', '{{ Carbon::today()->addDays($j) }}', '{{ $availability }}')" @endif>
-          {!! $availability !!}
+          @if($availability == 'N/A')
+            <b>{!! $availability !!}</b>
+          @else
+            {!! $availability !!}
+          @endif
         </td>
       @endfor
     </tr>
@@ -192,13 +196,13 @@
             <div class="col-md-4">
               <div class="form-group" id="hideaddtimelimit">
                 {!! Form::label('timelimit  ', 'Timelimit :') !!}
-                {!! Form::text('timelimit ', null, array('class' => 'form-control', 'placeholder' => 'Timelimit', 'id' => 'add_timelimit', 'min' => '0', 'step' => 'any', 'autocomplete' => 'off')) !!}
+                {!! Form::text('timelimit', null, array('class' => 'form-control', 'placeholder' => 'Timelimit', 'id' => 'add_timelimit', 'autocomplete' => 'off')) !!}
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
                 {!! Form::label('booked_by', 'Booked by:') !!}
-                {!! Form::text('booked_by', null, array('class' => 'form-control', 'placeholder' => 'Booked by', 'required' => '', 'id' => 'add_booked_by', 'min' => '0', 'step' => 'any')) !!}
+                {!! Form::text('booked_by', null, array('class' => 'form-control', 'placeholder' => 'Booked by', 'required' => '', 'id' => 'add_booked_by')) !!}
               </div>
             </div>
           </div>
@@ -227,6 +231,18 @@
               </div>
             </div>
           </div>
+          {{-- <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                {!! Form::label('room_names', 'Contact Number:') !!}
+                <select name="room_names[]" class="form-control" id="room_names" multiple="multiple" data-placeholder="Select more than one room">
+                  <option value="" selected="" disabled="">Select Reservation Status</option>
+                  <option value="Booked">Booked</option>
+                  <option value="Paid">Paid</option>
+                </select> 
+              </div>
+            </div>
+          </div> --}}
           <h4><i class="fa fa-handshake-o" aria-hidden="true"></i> <u>Financial Data</u></h4>
           <div class="row">
             <div class="col-md-3">
@@ -238,7 +254,15 @@
             <div class="col-md-3">
               <div class="form-group">
                 {!! Form::label('discount', 'Discount:') !!}
-                {!! Form::number('discount', null, array('class' => 'form-control', 'placeholder' => 'Discount', 'required' => '', 'id' => 'add_discount', 'min' => '0', 'step' => 'any', 'autocomplete' => 'off')) !!}
+                <div class="input-group">
+                  <input type="text" class="form-control" name="discount" id="add_discount" placeholder="Discount" min="0" step="any" autocomplete="off">
+                  <span class="input-group-btn" style="width:0px;"></span>
+                  <select class="form-control" id="add_discount_tk_or_percentage" name="discount_tk_or_percentage">
+                    <option value="" selected="" disabled="">Select</option>
+                    <option>Tk</option>
+                    <option>%</option>
+                  </select>
+                </div>
               </div>
             </div>
             <div class="col-md-3">
@@ -300,13 +324,13 @@
           <div class="col-md-4">
             <div class="form-group" id="hideedittimelimit">
               {!! Form::label('timelimit  ', 'Timelimit :') !!}
-              {!! Form::text('timelimit ', null, array('class' => 'form-control', 'placeholder' => 'Timelimit', 'id' => 'edit_timelimit', 'min' => '0', 'step' => 'any', 'autocomplete' => 'off')) !!}
+              {!! Form::text('timelimit ', null, array('class' => 'form-control', 'placeholder' => 'Timelimit', 'id' => 'edit_timelimit', 'autocomplete' => 'off')) !!}
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
               {!! Form::label('booked_by', 'Booked by:') !!}
-              {!! Form::text('booked_by', null, array('class' => 'form-control', 'placeholder' => 'Booked by', 'required' => '', 'id' => 'edit_booked_by', 'min' => '0', 'step' => 'any')) !!}
+              {!! Form::text('booked_by', null, array('class' => 'form-control', 'placeholder' => 'Booked by', 'required' => '', 'id' => 'edit_booked_by')) !!}
             </div>
           </div>
         </div>
@@ -341,7 +365,15 @@
           <div class="col-md-3">
             <div class="form-group">
               {!! Form::label('discount', 'Discount:') !!}
-              {!! Form::number('discount', null, array('class' => 'form-control', 'placeholder' => 'Discount', 'required' => '', 'id' => 'edit_discount', 'min' => '0', 'step' => 'any', 'autocomplete' => 'off')) !!}
+              <div class="input-group">
+                <input type="text" class="form-control" name="discount" id="edit_discount" placeholder="Discount" min="0" step="any" autocomplete="off">
+                <span class="input-group-btn" style="width:0px;"></span>
+                <select class="form-control" id="edit_discount_tk_or_percentage" name="discount_tk_or_percentage">
+                  <option value="" selected="" disabled="">Select</option>
+                  <option>Tk</option>
+                  <option>%</option>
+                </select>
+              </div>
             </div>
           </div>
           <div class="col-md-3">
@@ -374,6 +406,7 @@
   <script type="text/javascript" src="{{ asset('js/moment.js') }}"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
   <script type="text/javascript">
+    $('#room_names').select2();
     $(function(){
      $('a[title]').tooltip();
      $('button[title]').tooltip();
@@ -438,11 +471,13 @@
             date: reservation_data.timelimit
           });
         }
+        $('#edit_booked_by').val(reservation_data.booked_by);
         $('#edit_name').val(reservation_data.name);
         $('#edit_email').val(reservation_data.email);
         $('#edit_phone').val(reservation_data.phone);
         $('#edit_price').val(reservation_data.price);
         $('#edit_discount').val(reservation_data.discount);
+        $('#edit_discount_tk_or_percentage').val(reservation_data.discount_tk_or_percentage);
         $('#edit_advance').val(reservation_data.advance);
         $('#edit_due').val(reservation_data.due);
         
@@ -480,11 +515,37 @@
   <script type="text/javascript">
     $(document).ready(function(){
       $("#add_reservation_status_selected").change(function(){
+        var add_price = 0;
+        if($('#add_modal_room_name').text().substring(0, 3) == '101') {
+          add_price = 4000;
+        } else if($('#add_modal_room_name').text().substring(0, 3) == '102') {
+          add_price = 6000;
+        } else if($('#add_modal_room_name').text().substring(0, 3) == '102') {
+          add_price = 4000;
+        } else if($('#add_modal_room_name').text().substring(0, 3) == '201') {
+          add_price = 3000;
+        } else if($('#add_modal_room_name').text().substring(0, 3) == '202') {
+          add_price = 3000;
+        } else if($('#add_modal_room_name').text().substring(0, 3) == '203') {
+          add_price = 3000;
+        } else if($('#add_modal_room_name').text().substring(0, 3) == '301') {
+          add_price = 3000;
+        } else if($('#add_modal_room_name').text().substring(0, 3) == '302') {
+          add_price = 3000;
+        } else if($('#add_modal_room_name').text().substring(0, 3) == '303') {
+          add_price = 3000;
+        } else if($('#add_modal_room_name').text().substring(0, 3) == '401') {
+          add_price = 5000;
+        } else if($('#add_modal_room_name').text().substring(0, 3) == '402') {
+          add_price = 4000;
+        } else if($('#add_modal_room_name').text().substring(0, 3) == '403') {
+          add_price = 3500;
+        }
+        $('#add_price').val(add_price);
+        $('#add_discount').val(0);
+        $('#add_advance').val(0);
+        $('#add_due').val(add_price);
         if($(this).val() == 'Booked') {
-          $('#add_price').val(0);
-          $('#add_discount').val(0);
-          $('#add_advance').val(0);
-          $('#add_due').val(0);
           $('#hideaddtimelimit').css('display', '');
           $('#add_timelimit').datetimepicker({
             format: 'MMMM DD, YYYY hh:mm A'
@@ -517,14 +578,45 @@
         price = parseFloat($('#add_price').val()) || 0;
         discount = parseFloat($('#add_discount').val()) || 0;
         advance = parseFloat($('#add_advance').val()) || 0;
-        due = price - (discount + advance);
+
+        add_discount_tk_or_percentage = $("#add_discount_tk_or_percentage").val();
+        if(add_discount_tk_or_percentage == 'Tk') {
+          due = price - (discount + advance);
+        } else if(add_discount_tk_or_percentage == '%') {
+          due = price - ((price * (discount / 100)) + advance);
+        } else {
+          due = 0;
+        }
         $('#add_due').val(due);
       });
+      $("#add_discount_tk_or_percentage").change(function(){
+        price = parseFloat($('#add_price').val()) || 0;
+        discount = parseFloat($('#add_discount').val()) || 0;
+        advance = parseFloat($('#add_advance').val()) || 0;
+
+        add_discount_tk_or_percentage = $("#add_discount_tk_or_percentage").val();
+        if(add_discount_tk_or_percentage == 'Tk') {
+          due = price - (discount + advance);
+        } else if(add_discount_tk_or_percentage == '%') {
+          due = price - ((price * (discount / 100)) + advance);
+        } else {
+          due = 0;
+        }
+        $('#add_due').val(due);
+      });
+
       $("#add_advance").keyup(function(){
         price = parseFloat($('#add_price').val()) || 0;
         discount = parseFloat($('#add_discount').val()) || 0;
         advance = parseFloat($('#add_advance').val()) || 0;
-        due = price - (discount + advance);
+        add_discount_tk_or_percentage = $("#add_discount_tk_or_percentage").val();
+        if(add_discount_tk_or_percentage == 'Tk') {
+          due = price - (discount + advance);
+        } else if(add_discount_tk_or_percentage == '%') {
+          due = price - ((price * (discount / 100)) + advance);
+        } else {
+          due = 0;
+        }
         $('#add_due').val(due);
       });
       $("#edit_price").keyup(function(){
@@ -538,14 +630,44 @@
         price = parseFloat($('#edit_price').val()) || 0;
         discount = parseFloat($('#edit_discount').val()) || 0;
         advance = parseFloat($('#edit_advance').val()) || 0;
-        due = price - (discount + advance);
+
+        edit_discount_tk_or_percentage = $("#edit_discount_tk_or_percentage").val();
+        if(edit_discount_tk_or_percentage == 'Tk') {
+          due = price - (discount + advance);
+        } else if(edit_discount_tk_or_percentage == '%') {
+          due = price - ((price * (discount / 100)) + advance);
+        } else {
+          due = 0;
+        }
+        $('#edit_due').val(due);
+      });
+      $("#edit_discount_tk_or_percentage").change(function(){
+        price = parseFloat($('#edit_price').val()) || 0;
+        discount = parseFloat($('#edit_discount').val()) || 0;
+        advance = parseFloat($('#edit_advance').val()) || 0;
+
+        edit_discount_tk_or_percentage = $("#edit_discount_tk_or_percentage").val();
+        if(edit_discount_tk_or_percentage == 'Tk') {
+          due = price - (discount + advance);
+        } else if(edit_discount_tk_or_percentage == '%') {
+          due = price - ((price * (discount / 100)) + advance);
+        } else {
+          due = 0;
+        }
         $('#edit_due').val(due);
       });
       $("#edit_advance").keyup(function(){
         price = parseFloat($('#edit_price').val()) || 0;
         discount = parseFloat($('#edit_discount').val()) || 0;
         advance = parseFloat($('#edit_advance').val()) || 0;
-        due = price - (discount + advance);
+        edit_discount_tk_or_percentage = $("#edit_discount_tk_or_percentage").val();
+        if(edit_discount_tk_or_percentage == 'Tk') {
+          due = price - (discount + advance);
+        } else if(edit_discount_tk_or_percentage == '%') {
+          due = price - ((price * (discount / 100)) + advance);
+        } else {
+          due = 0;
+        }
         $('#edit_due').val(due);
       });
     }); 

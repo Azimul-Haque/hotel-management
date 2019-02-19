@@ -16,7 +16,7 @@
 <div class="table-fixed-left">
   <table class="table-fixed-left-side">
     <tr>
-      <th>Room <i class="fa fa-arrow-down" aria-hidden="true"></i>  | Date <i class="fa fa-arrow-right" aria-hidden="true"></i></th>
+      <th style="font-size: 16px !important;">Room <i class="fa fa-arrow-down" aria-hidden="true"></i>  | Date <i class="fa fa-arrow-right" aria-hidden="true"></i></th>
     </tr>
     <tr>
       <th style="background: #d1c4e9;" data-placement="right" title="101 Super Twin Double Bed">101 Super Twin D. Bed</th>
@@ -255,7 +255,7 @@
                 <div class="input-group">
                   <input type="text" class="form-control" name="discount" id="add_discount" placeholder="Discount" min="0" step="any" autocomplete="off">
                   <span class="input-group-btn" style="width:0px;"></span>
-                  <select class="form-control" id="add_discount_tk_or_percentage" name="discount_tk_or_percentage">
+                  <select class="form-control" id="add_discount_tk_or_percentage" name="discount_tk_or_percentage" style="width:70px;">
                     <option value="" selected="" disabled="">Select</option>
                     <option value="Tk">Tk</option>
                     <option value="%">%</option>
@@ -376,7 +376,7 @@
               <div class="input-group">
                 <input type="text" class="form-control" name="discount" id="edit_discount" placeholder="Discount" min="0" step="any" autocomplete="off">
                 <span class="input-group-btn" style="width:0px;"></span>
-                <select class="form-control" id="edit_discount_tk_or_percentage" name="discount_tk_or_percentage">
+                <select class="form-control" id="edit_discount_tk_or_percentage" name="discount_tk_or_percentage" style="width:70px;">
                   <option value="" selected="" disabled=""></option>
                   <option value="Tk">Tk</option>
                   <option value="%">%</option>

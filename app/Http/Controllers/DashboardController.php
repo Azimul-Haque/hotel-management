@@ -43,7 +43,7 @@ class DashboardController extends Controller
         // delete the timeout bookings...
         $allreservations = Reservation::whereBetween('date', [Carbon::today()->addDays(-15), Carbon::today()->addDays(15)])->get();
         foreach ($allreservations as $reservation) {
-            if(($reservation->reservation_status == 'Booked') && ($reservation->timelimit < Carbon::today()->addDays(-7))) {
+            if(($reservation->reservation_status == 'Booked') && ($reservation->timelimit < Carbon::now())) {
                 $reservation->delete();
                 //dd($reservation->timelimit);
             }
